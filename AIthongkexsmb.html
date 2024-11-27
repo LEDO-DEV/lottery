@@ -123,38 +123,59 @@
             };
 
             for (let i = 0; i < iterations; i++) {
-                // Ghép 4D
                 results.ghep4D.push(fillWithProbability(new Set(), 7, 0, 9));
-
-                // Ghép 3D
                 results.ghep3D.push(fillWithProbability(new Set(), 7, 0, 9));
-
-                // Dàn 2D
-                const dan2D = fillWithProbability(new Set(), 64, 0, 99)
+                results.dan2D.push(
+                    fillWithProbability(new Set(), 64, 0, 99)
                     .map(n => n.toString().padStart(2, '0'))
-                    .sort((a, b) => a - b);
-                results.dan2D.push(dan2D);
-
-                // Song Thủ Lô
-                results.songThuLo.push(fillWithProbability(new Set(), 2, 0, 99).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
-
-                // Tam Thủ Lô
-                results.tamThuLo.push(fillWithProbability(new Set(), 3, 0, 99).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
-
-                // Tứ Thủ Lô
-                results.tuThuLo.push(fillWithProbability(new Set(), 4, 0, 99).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
-
-                // Ngũ Thủ Lô
-                results.nguThuLo.push(fillWithProbability(new Set(), 5, 0, 99).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
-
-                // Mega 6/45
-                results.mega6_45.push(fillWithProbability(new Set(), 6, 1, 45).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
-
-                // Power 6/55
-                results.power6_55.push(fillWithProbability(new Set(), 6, 1, 55).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
+                    .sort((a, b) => a - b)
+                );
+                results.songThuLo.push(
+                    fillWithProbability(new Set(), 2, 0, 99)
+                    .map(n => n.toString().padStart(2, '0'))
+                    .sort((a, b) => a - b)
+                );
+                results.tamThuLo.push(
+                    fillWithProbability(new Set(), 3, 0, 99)
+                    .map(n => n.toString().padStart(2, '0'))
+                    .sort((a, b) => a - b)
+                );
+                results.tuThuLo.push(
+                    fillWithProbability(new Set(), 4, 0, 99)
+                    .map(n => n.toString().padStart(2, '0'))
+                    .sort((a, b) => a - b)
+                );
+                results.nguThuLo.push(
+                    fillWithProbability(new Set(), 5, 0, 99)
+                    .map(n => n.toString().padStart(2, '0'))
+                    .sort((a, b) => a - b)
+                );
+                results.mega6_45.push(
+                    fillWithProbability(new Set(), 6, 1, 45)
+                    .map(n => n.toString().padStart(2, '0'))
+                    .sort((a, b) => a - b)
+                );
+                results.power6_55.push(
+                    fillWithProbability(new Set(), 6, 1, 55)
+                    .map(n => n.toString().padStart(2, '0'))
+                    .sort((a, b) => a - b)
+                );
             }
 
             return results;
+        };
+
+        const checkDailyRun = (region) => {
+            const today = new Date().toISOString().split('T')[0];
+            const lastRunData = JSON.parse(localStorage.getItem('lastRun')) || {};
+
+            if (lastRunData[region] === today) {
+                return false;
+            }
+
+            lastRunData[region] = today;
+            localStorage.setItem('lastRun', JSON.stringify(lastRunData));
+            return true;
         };
 
         const displayResults = (results, region) => {
@@ -176,8 +197,14 @@
         document.getElementById('startSimulation').addEventListener('click', () => {
             const simulations = parseInt(document.getElementById('simulations').value);
             const region = document.getElementById('region').value;
+
             if (!simulations || simulations <= 0) {
                 alert('Vui lòng nhập số phiên chạy hợp lệ.');
+                return;
+            }
+
+            if (!checkDailyRun(region)) {
+                alert(`Bạn đã chạy Xổ Số ${region} hôm nay. Vui lòng thử lại vào ngày mai!`);
                 return;
             }
 

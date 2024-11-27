@@ -84,14 +84,12 @@
         <div class="input-section">
             <label for="simulations">Số phiên chạy mô phỏng:</label>
             <input type="number" id="simulations" placeholder="Nhập số phiên chạy" min="1">
-            
             <label for="region">Chọn miền:</label>
             <select id="region">
                 <option value="Miền Bắc">Xổ Số Miền Bắc</option>
                 <option value="Miền Trung">Xổ Số Miền Trung</option>
                 <option value="Miền Nam">Xổ Số Miền Nam</option>
             </select>
-
             <label for="province">Chọn đài xổ số:</label>
             <select id="province">
                 <!-- Các đài xổ số sẽ được điền qua JavaScript -->
@@ -105,17 +103,14 @@
         <!-- Nút Trang Chủ -->
         <button class="btn" id="homeButton">Trang Chủ</button>
     </div>
-
     <script>
         const generateRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-
         const fillWithProbability = (set, count, min, max) => {
             while (set.size < count) {
                 set.add(generateRandomNumber(min, max));
             }
             return [...set];
         };
-
         const monteCarloSimulation = (iterations) => {
             const results = {
                 ghep4D: [],
@@ -127,9 +122,8 @@
                 nguThuLo: [],
                 mega6_45: [],
                 power6_55: [],
-                dan4Cham: []  // Mảng Dàn 4 Chạm
+                dan4Cham: [] // Mảng Dàn 4 Chạm
             };
-
             for (let i = 0; i < iterations; i++) {
                 results.ghep4D.push(fillWithProbability(new Set(), 7, 0, 9));
                 results.ghep3D.push(fillWithProbability(new Set(), 7, 0, 9));
@@ -143,18 +137,16 @@
                 results.nguThuLo.push(fillWithProbability(new Set(), 5, 0, 99).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
                 results.mega6_45.push(fillWithProbability(new Set(), 6, 1, 45).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
                 results.power6_55.push(fillWithProbability(new Set(), 6, 1, 55).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
-
                 // Dàn 4 Chạm: 4 số không trùng nhau từ 0-9
                 const dan4Cham = fillWithProbability(new Set(), 4, 0, 9).sort((a, b) => a - b);
                 results.dan4Cham.push(dan4Cham);
             }
-
             return results;
         };
 
         const displayResults = (results, region) => {
             const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML = `  
+            resultDiv.innerHTML = `
                 <h2>Kết quả mô phỏng: ${region}</h2>
                 <p><strong>Ghép 4D:</strong> ${results.ghep4D[0].join(', ')}</p>
                 <p><strong>Ghép 3D:</strong> ${results.ghep3D[0].join(', ')}</p>
@@ -171,26 +163,14 @@
         };
 
         const provinces = {
-            "Miền Bắc": [
-                "Hà Nội", "Thái Bình", "Bắc Ninh", "Hải Phòng", "Nam Định", "Quảng Ninh"
-            ],
-            "Miền Trung": [
-                "Bình Định", "Đà Nẵng", "Đắk Lắk", "Đắk Nông", "Gia Lai", "Huế", 
-                "Khánh Hòa", "Kon Tum", "Ninh Thuận", "Phú Yên", "Quảng Bình", 
-                "Quảng Nam", "Quảng Ngãi", "Quảng Trị"
-            ],
-            "Miền Nam": [
-                "An Giang", "Bạc Liêu", "Bến Tre", "Bình Dương", "Bình Phước", "Bình Thuận",
-                "Cà Mau", "Cần Thơ", "Đà Lạt", "Đồng Nai", "Đồng Tháp", "Hậu Giang",
-                "Kiên Giang", "Long An", "Sóc Trăng", "Tây Ninh", "Tiền Giang", "TP.HCM",
-                "Trà Vinh", "Vĩnh Long", "Vũng Tàu"
-            ]
+            "Miền Bắc": ["Hà Nội", "Thái Bình", "Bắc Ninh", "Hải Phòng", "Nam Định", "Quảng Ninh"],
+            "Miền Trung": ["Bình Định", "Đà Nẵng", "Đắk Lắk", "Đắk Nông", "Gia Lai", "Huế", "Khánh Hòa", "Kon Tum", "Ninh Thuận", "Phú Yên", "Quảng Bình", "Quảng Nam", "Quảng Ngãi", "Quảng Trị"],
+            "Miền Nam": ["An Giang", "Bạc Liêu", "Bến Tre", "Bình Dương", "Bình Phước", "Bình Thuận", "Cà Mau", "Cần Thơ", "Đà Lạt", "Đồng Nai", "Đồng Tháp", "Hậu Giang", "Kiên Giang", "Long An", "Sóc Trăng", "Tây Ninh", "Tiền Giang", "TP.HCM", "Trà Vinh", "Vĩnh Long", "Vũng Tàu"]
         };
 
         const updateProvinces = (region) => {
             const provinceSelect = document.getElementById('province');
             provinceSelect.innerHTML = '<option value="">Chọn đài xổ số</option>';
-
             if (region === "Miền Bắc" || region === "Miền Trung" || region === "Miền Nam") {
                 const regionProvinces = provinces[region];
                 regionProvinces.forEach(province => {
@@ -202,18 +182,12 @@
             }
         };
 
-        const checkIfAlreadyPlayed = (province) => {
-            const currentDate = new Date().toISOString().split('T')[0]; // Format as YYYY-MM-DD
-            const playedKey = `played_${province}_${currentDate}`;
-            return localStorage.getItem(playedKey);
-        };
+        // Gọi updateProvinces khi trang được tải để hiển thị các đài của Miền Bắc mặc định
+        window.addEventListener('DOMContentLoaded', () => {
+            updateProvinces("Miền Bắc");
+        });
 
-        const markAsPlayed = (province) => {
-            const currentDate = new Date().toISOString().split('T')[0]; // Format as YYYY-MM-DD
-            const playedKey = `played_${province}_${currentDate}`;
-            localStorage.setItem(playedKey, "true");
-        };
-
+        // Cập nhật các đài khi người dùng thay đổi miền
         document.getElementById('region').addEventListener('change', (e) => {
             updateProvinces(e.target.value);
         });
@@ -222,33 +196,21 @@
             const simulations = parseInt(document.getElementById('simulations').value);
             const region = document.getElementById('region').value;
             const province = document.getElementById('province').value;
-
             if (!simulations || simulations <= 0 || !province) {
                 alert('Vui lòng nhập đầy đủ thông tin.');
                 return;
             }
-
-            if (checkIfAlreadyPlayed(province)) {
-                alert('Bạn đã quay xổ số đài này trong ngày hôm nay rồi.');
-                return;
-            }
-
             document.getElementById('output').style.display = 'block';
             document.getElementById('loading').style.display = 'block';
             document.getElementById('result').style.display = 'none';
-
             setTimeout(() => {
                 const results = monteCarloSimulation(simulations);
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('result').style.display = 'block';
                 displayResults(results, region);
-
-                // Đánh dấu đài đã quay trong ngày
-                markAsPlayed(province);
             }, 2000);
         });
 
-        // Thêm sự kiện cho nút Trang Chủ
         document.getElementById('homeButton').addEventListener('click', () => {
             window.location.href = 'https://ledo-dev.github.io/lottery/';
         });

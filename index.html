@@ -3,195 +3,245 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dàn Đề XSMB - Nhập Kết Quả</title>
+    <title>Chơi XSMB và Đua Xe Kubet</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f7fa;
+            background-color: #f4f4f9;
             margin: 0;
             padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
         }
-
-        header {
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 600px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .input-section {
+            margin-bottom: 20px;
+        }
+        .input-section input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .btn {
+            width: 100%;
+            padding: 10px;
             background-color: #4CAF50;
             color: white;
-            text-align: center;
-            padding: 20px 0;
-        }
-
-        .container {
-            margin: 20px;
-        }
-
-        .input-field {
-            margin-bottom: 10px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .input-field label {
             font-size: 16px;
-            margin-bottom: 5px;
-        }
-
-        .input-field input {
-            padding: 10px;
-            font-size: 16px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
-        }
-
-        .button {
-            background-color: #007BFF;
-            color: white;
-            font-size: 18px;
-            padding: 10px 20px;
             border: none;
             border-radius: 5px;
             cursor: pointer;
-            margin-top: 10px;
+            transition: background-color 0.3s;
         }
-
-        .button:hover {
-            background-color: #0056b3;
+        .btn:hover {
+            background-color: #45a049;
         }
-
-        .result {
+        .output-section {
             margin-top: 20px;
-            padding: 15px;
-            background-color: #e9f5e9;
-            border-radius: 5px;
         }
-
-        footer {
-            text-align: center;
-            padding: 20px;
-            background-color: #333;
-            color: white;
-            position: fixed;
-            bottom: 0;
-            width: 100%;
+        .button-container {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .button-container button {
+            width: 48%;
         }
     </style>
 </head>
 <body>
+    <div class="container">
+        <h1>Dàn Đề XSMB</h1>
+        
+        <div class="input-section">
+            <label for="sessions">Số phiên xổ số:</label>
+            <input type="number" id="sessions" placeholder="Nhập số phiên xổ số">
+        </div>
 
-<header>
-    <h1>Dàn Đề XSMB - Nhập Kết Quả</h1>
-</header>
+        <div class="input-section">
+            <label for="lottoResults">Nhập kết quả (ví dụ: 92630, cách nhau bằng dấu phẩy):</label>
+            <input type="text" id="lottoResults" placeholder="Nhập kết quả các phiên xổ số">
+        </div>
 
-<div class="container">
-    <div class="input-field">
-        <label for="sessions">Bạn muốn nhập kết quả của bao nhiêu phiên?</label>
-        <input type="number" id="sessions" min="1" required>
+        <button class="btn" id="submitBtn">Xử lý kết quả</button>
+
+        <div class="output-section" id="output"></div>
+
+        <!-- Thanh button mới -->
+        <div class="button-container">
+            <button class="btn" id="raceButton">Đua Xe Kubet</button>
+            <button class="btn" id="lottoButton">Dàn Đề XSMB</button>
+        </div>
     </div>
 
-    <div id="sessionInputs"></div>
+    <script>
+        // Xử lý Dàn Đề XSMB
+        const processLottoData = () => {
+            const sessions = parseInt(document.getElementById('sessions').value);
+            const results = document.getElementById('lottoResults').value.split(',').map(result => result.trim());
+            const data = [];
 
-    <button class="button" id="generateResults">Tính Toán Kết Quả</button>
+            results.forEach(sessionData => {
+                const sessionDigits = sessionData.split('');
+                const thousands = sessionDigits.slice(-5, -4).join('');
+                const hundreds = sessionDigits.slice(-4, -3).join('');
+                const tens = sessionDigits.slice(-3, -2).join('');
+                const lastTwoDigits = sessionDigits.slice(-2).join('');
+                data.push({ thousands, hundreds, tens, lastTwoDigits });
+            });
 
-    <div id="results" class="result" style="display:none;"></div>
-</div>
+            const getUniqueNumbers = (data, field, maxCount = 7) => {
+                const uniqueNumbers = new Set();
+                data.forEach(session => uniqueNumbers.add(session[field]));
+                const result = Array.from(uniqueNumbers).sort();
+                return result.slice(0, maxCount);
+            };
 
-<script>
-    // Hàm định dạng số thành chuỗi 2 chữ số
-    const formatNumber = (num) => num < 10 ? '0' + num : num.toString();
+            const calculateFrequency = (data, field) => {
+                const frequency = {};
+                data.forEach(session => {
+                    const number = session[field];
+                    frequency[number] = (frequency[number] || 0) + 1;
+                });
+                return Object.entries(frequency)
+                    .sort((a, b) => b[1] - a[1] || a[0] - b[0])
+                    .map(([num, freq]) => ({ num, freq }));
+            };
 
-    // Hàm để lấy dữ liệu từ form
-    const inputLottoData = () => {
-        const sessions = parseInt(document.getElementById('sessions').value);
-        const data = [];
+            const getBestNumbers = (frequency, topCount = 5) => {
+                return frequency.slice(0, topCount);
+            };
 
-        for (let session = 1; session <= sessions; session++) {
-            const sessionData = document.getElementById('session' + session).value.trim().split('');
-            const thousands = sessionData.slice(-5, -4).join(''); // Hàng chục nghìn
-            const hundreds = sessionData.slice(-4, -3).join(''); // Hàng nghìn
-            const tens = sessionData.slice(-3, -2).join(''); // Hàng trăm
-            const lastTwoDigits = sessionData.slice(-2).join(''); // Hàng chục (2 số cuối)
-            data.push({ thousands, hundreds, tens, lastTwoDigits });
-        }
-        return data;
-    };
+            const uniqueThousands = getUniqueNumbers(data, 'thousands');
+            const uniqueHundreds = getUniqueNumbers(data, 'hundreds');
+            const uniqueTens = getUniqueNumbers(data, 'tens');
+            const uniqueLastTwoDigits = getUniqueNumbers(data, 'lastTwoDigits');
+            const frequency = calculateFrequency(data, 'lastTwoDigits');
+            const bestNumbers = getBestNumbers(frequency);
 
-    // Tính toán tần suất xuất hiện của từng số
-    const calculateFrequency = (data, field) => {
-        const frequency = {};
-        data.forEach(session => {
-            const number = session[field];
-            frequency[number] = (frequency[number] || 0) + 1;
-        });
-
-        return Object.entries(frequency)
-            .sort((a, b) => b[1] - a[1] || a[0] - b[0]) // Sắp xếp theo tần suất giảm dần
-            .map(([num, freq]) => ({ num, freq }));
-    };
-
-    // Tính toán chu kỳ (momentum)
-    const calculateMomentum = (data, field) => {
-        const momentum = {};
-        data.forEach((session, index) => {
-            const number = session[field];
-            if (!momentum[number]) momentum[number] = { momentum: 0, lastIndex: index };
-            else {
-                momentum[number].momentum += index - momentum[number].lastIndex;
-                momentum[number].lastIndex = index;
-            }
-        });
-
-        return Object.entries(momentum)
-            .sort((a, b) => b[1].momentum - a[1].momentum || a[0] - b[0])
-            .map(([num, { momentum }]) => ({ num, momentum }));
-    };
-
-    // Tính toán các số tốt nhất
-    const getBestNumbers = (frequency, momentum, topCount = 5) => {
-        const combinedScores = frequency.map(({ num, freq }) => {
-            const momentumScore = momentum.find(m => m.num === num)?.momentum || 0;
-            return { num, score: freq + momentumScore * 2 };
-        });
-
-        return combinedScores
-            .sort((a, b) => b.score - a.score || a.num - b.num)
-            .slice(0, topCount);
-    };
-
-    // Hiển thị kết quả lên giao diện
-    const displayResults = (data) => {
-        const frequency = calculateFrequency(data, 'lastTwoDigits');
-        const momentum = calculateMomentum(data, 'lastTwoDigits');
-        const bestNumbers = getBestNumbers(frequency, momentum);
-
-        let resultHtml = `
-            <p><strong>Top Các Số:</strong> ${bestNumbers.map(({ num, score }) => `${num} (Điểm: ${score})`).join(', ')}</p>
-        `;
-
-        document.getElementById('results').style.display = 'block';
-        document.getElementById('results').innerHTML = resultHtml;
-    };
-
-    // Tạo form nhập dữ liệu cho các phiên
-    document.getElementById('sessions').addEventListener('input', () => {
-        const sessions = parseInt(document.getElementById('sessions').value);
-        const sessionInputs = document.getElementById('sessionInputs');
-        sessionInputs.innerHTML = '';
-
-        for (let session = 1; session <= sessions; session++) {
-            const inputField = document.createElement('div');
-            inputField.classList.add('input-field');
-            inputField.innerHTML = `
-                <label for="session${session}">Phiên ${session}: Nhập chuỗi số</label>
-                <input type="text" id="session${session}" required>
+            const output = `
+                <h2>Kết quả thống kê:</h2>
+                <p><strong>5D Ghep:</strong> ${uniqueThousands.join(', ')}</p>
+                <p><strong>4D Ghep:</strong> ${uniqueHundreds.join(', ')}</p>
+                <p><strong>3D Ghep:</strong> ${uniqueTens.join(', ')}</p>
+                <p><strong>2D Ghep:</strong> ${uniqueLastTwoDigits.join(', ')}</p>
+                <p><strong>Số tiền năng:</strong> ${bestNumbers.map(item => `${item.num} (Tần suất: ${item.freq})`).join(', ')}</p>
             `;
-            sessionInputs.appendChild(inputField);
+            document.getElementById('output').innerHTML = output;
+        };
+
+        document.getElementById('submitBtn').addEventListener('click', processLottoData);
+
+        // Xử lý chuyển trang khi nhấn nút Đua Xe Kubet
+        document.getElementById('raceButton').addEventListener('click', () => {
+            window.location.href = 'DuaXeKubet.html'; // Chuyển sang file DuaXeKubet.html
+        });
+
+        // Xử lý chuyển trang khi nhấn nút Dàn Đề XSMB
+        document.getElementById('lottoButton').addEventListener('click', () => {
+            window.location.href = 'index.html'; // Quay lại trang chính nếu cần
+        });
+
+        // Xử lý logic Đua Xe Kubet
+        const processRaceData = () => {
+            const generateAllNumbers = () => Array.from({ length: 10 }, (_, i) => (i + 1).toString().padStart(2, '0'));
+
+            const inputRaceData = () => {
+                const races = parseInt(prompt("Bạn muốn nhập kết quả của bao nhiêu vòng đua?"), 10);
+                const data = [];
+                for (let race = 1; race <= races; race++) {
+                    const raceData = prompt(`Vòng đua ${race}: Nhập kết quả (mỗi số từ 01 đến 10, cách nhau bằng dấu cách):`).trim().split(/\s+/).map(num => num.padStart(2, '0'));
+                    if (raceData.length !== 10) {
+                        alert("Lỗi: Mỗi vòng đua phải nhập đủ 10 số! Hãy thử lại.");
+                        race--;
+                    } else {
+                        data.push(raceData);
+                    }
+                }
+                return data;
+            };
+
+            const calculateFrequency = (data, allNumbers) => {
+                const frequency = Object.fromEntries(allNumbers.map(num => [num, 0]));
+                data.flat().forEach(num => {
+                    if (frequency[num] !== undefined) {
+                        frequency[num]++;
+                    }
+                });
+                return frequency;
+            };
+
+            const calculateMomentum = (data) => {
+                const momentum = {};
+                data.forEach((race, index) => {
+                    if (index === 0) return;
+                    race.forEach((num, position) => {
+                        if (!momentum[num]) momentum[num] = { momentum: 0, lastRank: position + 1 };
+                        const rankChange = momentum[num].lastRank - (position + 1);
+                        momentum[num].momentum += rankChange;
+                        momentum[num].lastRank = position + 1;
+                    });
+                });
+                return momentum;
+            };
+
+            const getRankResults = (data) => {
+                const ranks = [[], [], []];
+                data.forEach(race => {
+                    for (let i = 0; i < 3; i++) {
+                        if (race[i]) ranks[i].push(race[i]);
+                    }
+                });
+                return ranks.map(rankData => {
+                    const freq = rankData.reduce((acc, num) => {
+                        acc[num] = (acc[num] || 0) + 1;
+                        return acc;
+                    }, {});
+                    return Object.entries(freq).sort((a, b) => b[1] - a[1]);
+                });
+            };
+
+            const chooseBestNumbers = (frequency, momentum) => {
+                const combinedScores = Object.entries(frequency).map(([num, freq]) => {
+                    const momentumScore = momentum[num]?.momentum || 0;
+                    return [num, freq + momentumScore * 2];
+                });
+                return combinedScores.sort((a, b) => b[1] - a[1]);
+            };
+
+            const allNumbers = generateAllNumbers();
+            const data = inputRaceData();
+            const frequency = calculateFrequency(data, allNumbers);
+            const momentum = calculateMomentum(data);
+            const [rank1, rank2, rank3] = getRankResults(data);
+            const bestNumbers = chooseBestNumbers(frequency, momentum);
+
+            alert("Tần suất xuất hiện của các số:\n" +
+                Object.entries(frequency).sort((a, b) => b[1] - a[1]).map(([num, count]) => `${num}: ${count}`).join("\n"));
+
+            alert("Kết quả đua xe Kubet:\n" +
+                "Hạng 1: " + rank1.slice(0, 3).map(item => `${item[0]} (${item[1]} lần)`).join(", ") + "\n" +
+                "Hạng 2: " + rank2.slice(0, 3).map(item => `${item[0]} (${item[1]} lần)`).join(", ") + "\n" +
+                "Hạng 3: " + rank3.slice(0, 3).map(item => `${item[0]} (${item[1]} lần)`).join(", ") + "\n" +
+                "Các số tốt nhất để chọn dựa trên tần suất và momentum:\n" + 
+                bestNumbers.slice(0, 5).map(item => `${item[0]} (Điểm: ${item[1]})`).join("\n"));
         }
-    });
-
-    // Khi nhấn nút "Tính Toán Kết Quả"
-    document.getElementById('generateResults').addEventListener('click', () => {
-        const data = inputLottoData();
-        displayResults(data);
-    });
-</script>
-
+    </script>
 </body>
 </html>

@@ -26,6 +26,14 @@
         h1 {
             text-align: center;
             color: #333;
+            position: relative; /* Để dễ dàng thêm hình ảnh vào sau chữ */
+        }
+        h1 img {
+            position: absolute;
+            right: -50px; /* Di chuyển hình ảnh ra ngoài */
+            top: 50%;
+            transform: translateY(-50%);
+            width: 30px; /* Kích thước hình ảnh */
         }
         .button-container {
             margin-top: 20px;
@@ -52,7 +60,7 @@
 </head>
 <body>
     <div class="container">
-        <h1>Chọn Hạng Mục</h1>
+        <h1>Chọn Hạng Mục <img src="luckynumber.png" alt="Logo"></h1> <!-- Thêm hình ảnh logo vào đây -->
         <div class="button-container">
             <button id="lottoButton">Dàn Đề XSMB</button>
             <button id="raceButton">Đua Xe Kubet</button>

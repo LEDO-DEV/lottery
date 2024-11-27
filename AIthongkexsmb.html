@@ -103,14 +103,17 @@
         <!-- Nút Trang Chủ -->
         <button class="btn" id="homeButton">Trang Chủ</button>
     </div>
+
     <script>
         const generateRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
         const fillWithProbability = (set, count, min, max) => {
             while (set.size < count) {
                 set.add(generateRandomNumber(min, max));
             }
             return [...set];
         };
+
         const monteCarloSimulation = (iterations) => {
             const results = {
                 ghep4D: [],
@@ -151,14 +154,13 @@
                 <p><strong>Ghép 4D:</strong> ${results.ghep4D[0].join(', ')}</p>
                 <p><strong>Ghép 3D:</strong> ${results.ghep3D[0].join(', ')}</p>
                 <p><strong>Dàn 2D:</strong> ${results.dan2D[0].join(', ')}</p>
-                <p><strong>Dàn 4 Chạm:</strong> ${results.dan4Cham[0].join(', ')}</p>
                 <p><strong>Song Thủ Lô:</strong> ${results.songThuLo[0].join(', ')}</p>
                 <p><strong>Tam Thủ Lô:</strong> ${results.tamThuLo[0].join(', ')}</p>
                 <p><strong>Tứ Thủ Lô:</strong> ${results.tuThuLo[0].join(', ')}</p>
                 <p><strong>Ngũ Thủ Lô:</strong> ${results.nguThuLo[0].join(', ')}</p>
                 <p><strong>Mega 6/45:</strong> ${results.mega6_45[0].join(', ')}</p>
                 <p><strong>Power 6/55:</strong> ${results.power6_55[0].join(', ')}</p>
-                
+                <p><strong>Dàn 4 Chạm:</strong> ${results.dan4Cham[0].join(', ')}</p>
             `;
         };
 

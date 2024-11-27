@@ -126,6 +126,9 @@
             <h2>Thống kê kết quả xổ số:</h2>
             <pre id="resultText"></pre>
         </div>
+
+        <!-- Button Trang Chủ -->
+        <button id="homeBtn" style="width: 100%;">Trang Chủ</button>
     </div>
 
     <script>
@@ -273,6 +276,11 @@
 
             document.getElementById('resultText').textContent = resultText;
             document.getElementById('results').style.display = 'block';
+        });
+
+        // Chuyển hướng về trang chủ khi bấm vào nút "Trang Chủ"
+        document.getElementById('homeBtn').addEventListener('click', () => {
+            window.location.href = "https://ledo-dev.github.io/lottery/";
         });
     </script>
 </body>

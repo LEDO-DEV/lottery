@@ -97,6 +97,8 @@
             <div class="loading" id="loading">Đang chạy mô phỏng, vui lòng chờ...</div>
             <div class="result-section" id="result"></div>
         </div>
+        <!-- Nút Trang Chủ -->
+        <button class="btn" id="homeButton">Trang Chủ</button>
     </div>
 
     <script>
@@ -123,34 +125,17 @@
             };
 
             for (let i = 0; i < iterations; i++) {
-                // Ghép 4D
                 results.ghep4D.push(fillWithProbability(new Set(), 7, 0, 9));
-
-                // Ghép 3D
                 results.ghep3D.push(fillWithProbability(new Set(), 7, 0, 9));
-
-                // Dàn 2D
                 const dan2D = fillWithProbability(new Set(), 64, 0, 99)
                     .map(n => n.toString().padStart(2, '0'))
                     .sort((a, b) => a - b);
                 results.dan2D.push(dan2D);
-
-                // Song Thủ Lô
                 results.songThuLo.push(fillWithProbability(new Set(), 2, 0, 99).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
-
-                // Tam Thủ Lô
                 results.tamThuLo.push(fillWithProbability(new Set(), 3, 0, 99).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
-
-                // Tứ Thủ Lô
                 results.tuThuLo.push(fillWithProbability(new Set(), 4, 0, 99).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
-
-                // Ngũ Thủ Lô
                 results.nguThuLo.push(fillWithProbability(new Set(), 5, 0, 99).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
-
-                // Mega 6/45
                 results.mega6_45.push(fillWithProbability(new Set(), 6, 1, 45).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
-
-                // Power 6/55
                 results.power6_55.push(fillWithProbability(new Set(), 6, 1, 55).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
             }
 
@@ -191,6 +176,11 @@
                 document.getElementById('result').style.display = 'block';
                 displayResults(results, region);
             }, 2000);
+        });
+
+        // Thêm sự kiện cho nút Trang Chủ
+        document.getElementById('homeButton').addEventListener('click', () => {
+            window.location.href = 'https://ledo-dev.github.io/lottery/';
         });
     </script>
 </body>

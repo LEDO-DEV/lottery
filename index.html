@@ -30,10 +30,11 @@
         .button-container {
             margin-top: 20px;
             display: flex;
+            flex-wrap: wrap; /* Cho phép các nút xuống hàng khi không còn đủ không gian ngang */
             justify-content: space-between;
         }
         .button-container button {
-            width: 48%;
+            width: 48%; /* Mỗi nút chiếm 48% chiều rộng */
             padding: 10px;
             background-color: #4CAF50;
             color: white;
@@ -42,6 +43,7 @@
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s;
+            margin-bottom: 10px; /* Thêm khoảng cách giữa các nút khi xuống hàng */
         }
         .button-container button:hover {
             background-color: #45a049;

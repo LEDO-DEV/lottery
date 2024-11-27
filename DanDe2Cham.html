@@ -68,12 +68,12 @@
 
     <script>
         function getConversion() {
-            // Lấy giá trị từ các ô nhập liệu
-            var sodacbiet = document.getElementById("ttgSodacbiet").value;
-            var sogiaihat = document.getElementById("ttSogiaihat").value;
+            // Lấy giá trị từ các ô nhập liệu và chuyển sang kiểu số
+            var sodacbiet = parseInt(document.getElementById("ttgSodacbiet").value);
+            var sogiaihat = parseInt(document.getElementById("ttSogiaihat").value);
 
             // Kiểm tra giá trị hợp lệ (chỉ từ 0-9)
-            if (sodacbiet < 0 || sodacbiet > 9 || sogiaihat < 0 || sogiaihat > 9) {
+            if (isNaN(sodacbiet) || isNaN(sogiaihat) || sodacbiet < 0 || sodacbiet > 9 || sogiaihat < 0 || sogiaihat > 9) {
                 document.getElementById("result").innerHTML = "Vui lòng nhập số trong khoảng từ 0 đến 9!";
                 return;
             }

@@ -51,7 +51,7 @@
         }
 
         button {
-            width: 100%;
+            width: 48%;
             padding: 10px;
             background-color: #4CAF50;
             color: white;
@@ -63,6 +63,12 @@
 
         button:hover {
             background-color: #45a049;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
         }
 
         .output-section {
@@ -95,7 +101,10 @@
             <textarea id="numbers" rows="6" placeholder="Nhập các số xuất hiện cho mỗi vé"></textarea>
         </div>
 
-        <button id="submit">Phân tích</button>
+        <div class="btn-container">
+            <button id="submit">Phân tích</button>
+            <button id="homeBtn">Trang Chủ</button>
+        </div>
 
         <div class="output-section">
             <h2>Tần suất xuất hiện của các số</h2>
@@ -209,6 +218,11 @@
 
             const trends = analyzeTrend(data, hotNumbers.slice(0, numToChoose));
             displayResults(hotNumbers, trends);
+        });
+
+        // Chuyển hướng về trang chủ
+        document.getElementById('homeBtn').addEventListener('click', () => {
+            window.location.href = 'https://ledo-dev.github.io/lottery/';
         });
     </script>
 </body>

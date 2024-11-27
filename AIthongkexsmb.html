@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phân Tích Kết Quả Xổ Số</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 800px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .input-section {
+            margin-bottom: 20px;
+        }
+        .input-section input, .input-section select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        .output-section {
+            margin-top: 20px;
+            display: none;
+        }
+        .loading {
+            text-align: center;
+            font-size: 16px;
+            color: #888;
+        }
+        .result-section {
+            margin-top: 20px;
+        }
+        .result-section h2 {
+            color: #333;
+        }
+        .result-section p {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Phân Tích Kết Quả Xổ Số</h1>
+        <div class="input-section">
+            <label for="simulations">Số phiên chạy mô phỏng (Monte Carlo):</label>
+            <input type="number" id="simulations" placeholder="Nhập số phiên chạy" min="1">
+        </div>
+        <div class="btn-container">
+            <button class="btn" id="startSimulation">Chạy Mô Phỏng</button>
+        </div>
+        <div class="output-section" id="output">
+            <div class="loading" id="loading">Đang chạy mô phỏng, vui lòng chờ...</div>
+            <div class="result-section" id="result"></div>
+        </div>
+    </div>
+
+    <script>
+        const generateRandomNumber = (min, max) => {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        };
+
+        const monteCarloSimulation = (iterations) => {
+            const results = {
+                ghep4D: [],
+                ghep3D: [],
+                dan2D: [],
+                cham4So: [],
+                loXien: [],
+                mega6_45: [],
+                power6_55: []
+            };
+
+            for (let i = 0; i < iterations; i++) {
+                // 4D Ghép
+                const ghep4D = Array.from(new Set(Array(7).fill(0).map(() => generateRandomNumber(0, 9))));
+                results.ghep4D.push(ghep4D);
+
+                // 3D Ghép
+                const ghep3D = Array.from(new Set(Array(7).fill(0).map(() => generateRandomNumber(0, 9))));
+                results.ghep3D.push(ghep3D);
+
+                // 2D Ghép
+                const dan2D = Array.from(new Set(Array(64).fill(0).map(() => generateRandomNumber(0, 99))));
+                results.dan2D.push(dan2D);
+
+                // Chạm 4 Số
+                const cham4So = Array.from(new Set(Array(4).fill(0).map(() => generateRandomNumber(0, 9))));
+                results.cham4So.push(cham4So);
+
+                // Lô Xiên
+                const loXien = Array.from(new Set(Array(10).fill(0).map(() => generateRandomNumber(0, 99))));
+                results.loXien.push(loXien);
+
+                // Mega 6/45
+                const mega6_45 = Array.from(new Set(Array(6).fill(0).map(() => generateRandomNumber(1, 45))));
+                results.mega6_45.push(mega6_45);
+
+                // Power 6/55
+                const power6_55 = Array.from(new Set(Array(6).fill(0).map(() => generateRandomNumber(1, 55))));
+                results.power6_55.push(power6_55);
+            }
+
+            return results;
+        };
+
+        const displayResults = (results) => {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <h2>Kết quả mô phỏng:</h2>
+                <p><strong>Ghép 4D:</strong> ${results.ghep4D[0].join(', ')}</p>
+                <p><strong>Ghép 3D:</strong> ${results.ghep3D[0].join(', ')}</p>
+                <p><strong>Dàn 2D:</strong> ${results.dan2D[0].join(', ')}</p>
+                <p><strong>Dàn Chạm 4 Số:</strong> ${results.cham4So[0].join(', ')}</p>
+                <p><strong>Lô Xiên:</strong> ${results.loXien[0].join(', ')}</p>
+                <p><strong>Mega 6/45:</strong> ${results.mega6_45[0].join(', ')}</p>
+                <p><strong>Power 6/55:</strong> ${results.power6_55[0].join(', ')}</p>
+            `;
+        };
+
+        document.getElementById('startSimulation').addEventListener('click', () => {
+            const simulations = parseInt(document.getElementById('simulations').value);
+            if (!simulations || simulations <= 0) {
+                alert('Vui lòng nhập số phiên chạy hợp lệ.');
+                return;
+            }
+
+            document.getElementById('output').style.display = 'block';
+            document.getElementById('loading').style.display = 'block';
+            document.getElementById('result').style.display = 'none';
+
+            setTimeout(() => {
+                const results = monteCarloSimulation(simulations);
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('result').style.display = 'block';
+                displayResults(results);
+            }, 2000); // Giả lập thời gian chạy mô phỏng
+        });
+    </script>
+</body>
+</html>

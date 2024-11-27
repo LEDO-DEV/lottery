@@ -27,6 +27,11 @@
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             border-radius: 8px;
         }
+        label {
+            font-weight: bold;
+            display: block;
+            margin-top: 10px;
+        }
         input[type="text"], input[type="number"], button {
             width: calc(100% - 22px);
             padding: 10px;
@@ -76,16 +81,21 @@
         </div>
     </main>
     <script>
+        // Hàm format số (đảm bảo 2 chữ số)
         const formatNumber = (num) => (num < 10 ? '0' + num : num.toString());
 
+        // Xử lý khi bấm nút "Tạo ô nhập liệu"
         document.getElementById('generate-inputs').addEventListener('click', () => {
             const races = parseInt(document.getElementById('races').value, 10);
             const raceInputs = document.getElementById('race-inputs');
-            raceInputs.innerHTML = '';
+            raceInputs.innerHTML = ''; // Xóa nội dung cũ
+
             if (isNaN(races) || races <= 0) {
                 alert('Vui lòng nhập số vòng đua hợp lệ!');
                 return;
             }
+
+            // Tạo các ô nhập liệu
             for (let i = 1; i <= races; i++) {
                 const input = document.createElement('input');
                 input.type = 'text';
@@ -96,11 +106,15 @@
             }
         });
 
+        // Xử lý khi bấm nút "Phân tích kết quả"
         document.getElementById('race-form').addEventListener('submit', (event) => {
             event.preventDefault();
+
             const races = parseInt(document.getElementById('races').value, 10);
-            const allNumbers = Array.from({ length: 10 }, (_, i) => formatNumber(i + 1));
+            const allNumbers = Array.from({ length: 10 }, (_, i) => formatNumber(i + 1)); // Các số từ 01-10
             const data = [];
+
+            // Lấy dữ liệu từ từng ô nhập
             for (let i = 1; i <= races; i++) {
                 const raceData = document.getElementById(`race-${i}`).value.trim().split(/\s+/);
                 if (raceData.length !== 10) {
@@ -110,12 +124,17 @@
                 data.push(raceData.map(formatNumber));
             }
 
+            // Tính tần suất xuất hiện
             const frequency = Object.fromEntries(allNumbers.map(num => [num, 0]));
             data.flat().forEach(num => {
                 if (frequency[num] !== undefined) frequency[num]++;
             });
 
-            const output = Object.entries(frequency).sort((a, b) => b[1] - a[1]).map(([num, count]) => `${num}: ${count} lần`).join('\n');
+            // Hiển thị kết quả
+            const output = Object.entries(frequency)
+                .sort((a, b) => b[1] - a[1]) // Sắp xếp theo tần suất giảm dần
+                .map(([num, count]) => `${num}: ${count} lần`)
+                .join('\n');
 
             document.getElementById('output').textContent = `Tần suất xuất hiện các số:\n${output}`;
         });

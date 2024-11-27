@@ -42,6 +42,7 @@
             border-radius: 4px;
             font-size: 16px;
             cursor: pointer;
+            margin-top: 10px;
         }
         button:hover {
             background-color: #45a049;
@@ -50,6 +51,12 @@
             margin-top: 20px;
             font-size: 18px;
             color: #333;
+        }
+        .home-btn {
+            background-color: #008CBA;
+        }
+        .home-btn:hover {
+            background-color: #007B9A;
         }
     </style>
 </head>
@@ -64,6 +71,8 @@
         <br>
         <button onclick="getConversion()">Lấy Số</button>
         <div class="result" id="result"></div>
+        <br>
+        <button class="home-btn" onclick="goHome()">Trang Chủ</button>
     </div>
 
     <script>
@@ -119,6 +128,11 @@
                 }
             }
             return "Không có quy đổi"; // Trường hợp không tìm thấy
+        }
+
+        // Hàm chuyển hướng về trang chủ
+        function goHome() {
+            window.location.href = "https://ledo-dev.github.io/lottery/";
         }
     </script>
 </body>

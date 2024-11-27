@@ -10,11 +10,24 @@
             background-color: #f4f4f9;
             margin: 0;
             padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
         }
+        /* Thanh điều hướng */
+        .navbar {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .navbar h1 {
+            margin: 0;
+        }
+        .navbar img {
+            height: 40px; /* Kích thước hình ảnh */
+            margin-left: 10px; /* Khoảng cách giữa chữ và logo */
+        }
+
         .container {
             background-color: white;
             border-radius: 8px;
@@ -22,18 +35,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
             width: 80%;
             max-width: 600px;
-        }
-        h1 {
-            text-align: center;
-            color: #333;
-            position: relative; /* Để dễ dàng thêm hình ảnh vào sau chữ */
-        }
-        h1 img {
-            position: absolute;
-            right: -50px; /* Di chuyển hình ảnh ra ngoài */
-            top: 50%;
-            transform: translateY(-50%);
-            width: 30px; /* Kích thước hình ảnh */
+            margin: 20px auto;
         }
         .button-container {
             margin-top: 20px;
@@ -59,8 +61,14 @@
     </style>
 </head>
 <body>
+    <!-- Thanh điều hướng -->
+    <div class="navbar">
+        <h1>XSMB - LE DO</h1>
+        <img src="luckynumber.png" alt="Logo"> <!-- Chèn logo ở đây -->
+    </div>
+
     <div class="container">
-        <h1>Chọn Hạng Mục <img src="luckynumber.png" alt="Logo"></h1> <!-- Thêm hình ảnh logo vào đây -->
+        <h1>Chọn Hạng Mục</h1>
         <div class="button-container">
             <button id="lottoButton">Dàn Đề XSMB</button>
             <button id="raceButton">Đua Xe Kubet</button>

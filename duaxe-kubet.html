@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đua Xe Kubet</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f9f9f9;
+            color: #333;
+        }
+        header {
+            background: #007bff;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+        main {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 1rem;
+            background: white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        input[type="text"], input[type="number"], button {
+            width: calc(100% - 22px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        button {
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #0056b3;
+        }
+        .results {
+            margin-top: 20px;
+        }
+        .results pre {
+            background: #f4f4f4;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Đua Xe Kubet</h1>
+        <p>Nhập kết quả đua xe và xem phân tích</p>
+    </header>
+    <main>
+        <form id="race-form">
+            <label for="races">Số vòng đua:</label>
+            <input type="number" id="races" min="1" placeholder="Nhập số vòng đua">
+
+            <div id="race-inputs"></div>
+
+            <button type="button" id="generate-inputs">Tạo ô nhập liệu</button>
+            <button type="submit">Phân tích kết quả</button>
+        </form>
+        <div class="results">
+            <h2>Kết quả:</h2>
+            <pre id="output"></pre>
+        </div>
+    </main>
+    <script>
+        const formatNumber = (num) => (num < 10 ? '0' + num : num.toString());
+
+        document.getElementById('generate-inputs').addEventListener('click', () => {
+            const races = parseInt(document.getElementById('races').value, 10);
+            const raceInputs = document.getElementById('race-inputs');
+            raceInputs.innerHTML = '';
+            if (isNaN(races) || races <= 0) {
+                alert('Vui lòng nhập số vòng đua hợp lệ!');
+                return;
+            }
+            for (let i = 1; i <= races; i++) {
+                const input = document.createElement('input');
+                input.type = 'text';
+                input.placeholder = `Nhập kết quả vòng ${i} (10 số cách nhau dấu cách)`;
+                input.id = `race-${i}`;
+                input.required = true;
+                raceInputs.appendChild(input);
+            }
+        });
+
+        document.getElementById('race-form').addEventListener('submit', (event) => {
+            event.preventDefault();
+            const races = parseInt(document.getElementById('races').value, 10);
+            const allNumbers = Array.from({ length: 10 }, (_, i) => formatNumber(i + 1));
+            const data = [];
+            for (let i = 1; i <= races; i++) {
+                const raceData = document.getElementById(`race-${i}`).value.trim().split(/\s+/);
+                if (raceData.length !== 10) {
+                    alert(`Vòng ${i} phải có đúng 10 số!`);
+                    return;
+                }
+                data.push(raceData.map(formatNumber));
+            }
+
+            const frequency = Object.fromEntries(allNumbers.map(num => [num, 0]));
+            data.flat().forEach(num => {
+                if (frequency[num] !== undefined) frequency[num]++;
+            });
+
+            const output = Object.entries(frequency).sort((a, b) => b[1] - a[1]).map(([num, count]) => `${num}: ${count} lần`).join('\n');
+
+            document.getElementById('output').textContent = `Tần suất xuất hiện các số:\n${output}`;
+        });
+    </script>
+</body>
+</html>

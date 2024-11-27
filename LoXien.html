@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kết Quả Xổ Số</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        h1 {
+            text-align: center;
+        }
+        .output {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Kết Quả Xổ Số</h1>
+
+    <div>
+        <label for="days">Nhập số ngày: </label>
+        <input type="number" id="days" min="1" placeholder="Nhập số ngày">
+        <button id="submitDays">Nhập kết quả</button>
+    </div>
+
+    <div id="inputData" class="output" style="display: none;">
+        <h2>Nhập kết quả xổ số cho từng ngày:</h2>
+        <div id="dayInputs"></div>
+        <button id="processData">Xử lý dữ liệu</button>
+    </div>
+
+    <div id="results" class="output" style="display: none;">
+        <h2>Thống kê kết quả xổ số:</h2>
+        <pre id="resultText"></pre>
+    </div>
+
+    <script>
+        const formatNumber = (num) => {
+            return num < 10 ? '0' + num : num.toString();
+        };
+
+        const generateAllNumbers = () => {
+            const allNumbers = [];
+            for (let i = 0; i <= 99; i++) {
+                allNumbers.push(formatNumber(i));  
+            }
+            return allNumbers;
+        };
+
+        const calculateFrequency = (data, allNumbers) => {
+            const frequency = {};
+            allNumbers.forEach(num => {
+                frequency[num] = 0;
+            });
+            data.forEach(day => {
+                day.forEach(num => {
+                    frequency[num] = (frequency[num] || 0) + 1;
+                });
+            });
+            return frequency;
+        };
+
+        const calculateMomentum = (data, allNumbers) => {
+            const momentum = {};
+            allNumbers.forEach(num => {
+                momentum[num] = 0;
+            });
+
+            for (let i = 1; i < data.length; i++) {
+                const previousDay = data[i - 1];
+                const currentDay = data[i];
+
+                previousDay.forEach(num => {
+                    if (currentDay.includes(num)) {
+                        momentum[num]++;
+                    } else {
+                        momentum[num]--;
+                    }
+                });
+            }
+            return momentum;
+        };
+
+        const calculateStatistics = (frequency, allNumbers) => {
+            const stats = {
+                mean: 0,
+                stddev: 0,
+            };
+            const values = Object.values(frequency);
+            const total = values.reduce((sum, count) => sum + count, 0);
+            stats.mean = total / allNumbers.length;
+
+            const variance = values.reduce((varianceSum, count) => varianceSum + Math.pow(count - stats.mean, 2), 0) / allNumbers.length;
+            stats.stddev = Math.sqrt(variance);
+
+            return stats;
+        };
+
+        const calculateHotAndColdWithCycles = (frequency, momentum) => {
+            const hotNumbers = Object.entries(frequency).sort((a, b) => b[1] - a[1]);
+            const coldNumbers = Object.entries(frequency).sort((a, b) => a[1] - b[1]);
+
+            coldNumbers.forEach(([num, count]) => {
+                if (momentum[num] > 0) {
+                    coldNumbers.push([num, count + 2]);
+                }
+            });
+
+            return { hotNumbers, coldNumbers };
+        };
+
+        const chooseBalancedNumbers = (hotNumbers, coldNumbers, count) => {
+            const selectedNumbers = [];
+            selectedNumbers.push(...hotNumbers.slice(0, Math.floor(count / 2)));
+            selectedNumbers.push(...coldNumbers.slice(0, Math.ceil(count / 2)));
+            return selectedNumbers;
+        };
+
+        let allNumbers = [];
+        let data = [];
+
+        document.getElementById('submitDays').addEventListener('click', () => {
+            const days = parseInt(document.getElementById('days').value);
+            if (isNaN(days) || days <= 0) {
+                alert("Số ngày không hợp lệ!");
+                return;
+            }
+
+            allNumbers = generateAllNumbers();
+            data = [];
+            let dayInputs = '';
+
+            for (let i = 1; i <= days; i++) {
+                dayInputs += `
+                    <div>
+                        <label for="day${i}">Ngày ${i}: </label>
+                        <input type="text" id="day${i}" placeholder="Nhập các số lo (cách nhau bằng dấu cách)">
+                    </div>
+                `;
+            }
+
+            document.getElementById('dayInputs').innerHTML = dayInputs;
+            document.getElementById('inputData').style.display = 'block';
+        });
+
+        document.getElementById('processData').addEventListener('click', () => {
+            const days = parseInt(document.getElementById('days').value);
+            for (let i = 1; i <= days; i++) {
+                const dayData = document.getElementById(`day${i}`).value.split(' ').map(num => formatNumber(num));
+                data.push(dayData);
+            }
+
+            const frequency = calculateFrequency(data, allNumbers);
+            const momentum = calculateMomentum(data, allNumbers);
+            const stats = calculateStatistics(frequency, allNumbers);
+            const { hotNumbers, coldNumbers } = calculateHotAndColdWithCycles(frequency, momentum);
+
+            const numToChoose = parseInt(prompt("Bạn muốn lấy bao nhiêu số lo?"));
+            if (isNaN(numToChoose) || numToChoose <= 0) {
+                alert("Số lượng không hợp lệ!");
+                return;
+            }
+
+            const chosenNumbers = chooseBalancedNumbers(hotNumbers, coldNumbers, numToChoose);
+
+            let resultText = "Tần suất xuất hiện của các số:\n";
+            hotNumbers.forEach(([num, count]) => {
+                resultText += `${num}: ${count} lần\n`;
+            });
+
+            resultText += "\nCác số lo bạn nên chọn là:\n";
+            chosenNumbers.forEach(num => {
+                resultText += `${num}\n`;
+            });
+
+            resultText += "\nThống kê:\n";
+            resultText += `Trung bình tần suất: ${stats.mean.toFixed(2)}\n`;
+            resultText += `Độ lệch chuẩn: ${stats.stddev.toFixed(2)}\n`;
+
+            document.getElementById('resultText').textContent = resultText;
+            document.getElementById('results').style.display = 'block';
+        });
+    </script>
+</body>
+</html>

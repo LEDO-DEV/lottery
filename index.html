@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>XSMB - LE DO</title>
-    <img src="luckynumber.png" alt="Logo">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -20,13 +19,29 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            position: relative; /* Để logo có thể được đặt lên nền */
         }
         .navbar h1 {
             margin: 0;
+            position: relative; /* Để tiêu đề nổi lên trên logo */
+            z-index: 1;
         }
         .navbar img {
             height: 40px; /* Kích thước hình ảnh */
             margin-left: 10px; /* Khoảng cách giữa chữ và logo */
+        }
+        .navbar::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: url('luckynumber.png');
+            background-size: cover; /* Kéo dài hình ảnh để phủ kín */
+            background-position: center; /* Căn giữa logo */
+            opacity: 0.1; /* Giảm độ mờ cho logo phía sau */
+            z-index: 0; /* Đảm bảo logo ở phía sau */
         }
 
         .container {
@@ -64,7 +79,7 @@
 <body>
     <!-- Thanh điều hướng -->
     <div class="navbar">
-        <h1>XSMB - LE DO DEV</h1>
+        <h1>XSMB - LE DO</h1>
         <img src="luckynumber.png" alt="Logo"> <!-- Chèn logo ở đây -->
     </div>
 

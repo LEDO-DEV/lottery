@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Phân Tích Kết Quả Xổ Số</title>
     <style>
-        /* CSS giống như trước đây */
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f9;
@@ -94,14 +93,9 @@
             </select>
         </div>
         <button class="btn" id="startSimulation">Chạy Mô Phỏng</button>
-        <button class="btn" id="viewHistory">Lịch Sử Đã Quay</button>
         <div class="output-section" id="output">
             <div class="loading" id="loading">Đang chạy mô phỏng, vui lòng chờ...</div>
             <div class="result-section" id="result"></div>
-        </div>
-        <div class="output-section" id="history" style="display: none;">
-            <h2>Lịch Sử Đã Quay</h2>
-            <div id="historyContent"></div>
         </div>
     </div>
 
@@ -129,43 +123,55 @@
             };
 
             for (let i = 0; i < iterations; i++) {
+                // Ghép 4D
                 results.ghep4D.push(fillWithProbability(new Set(), 7, 0, 9));
+
+                // Ghép 3D
                 results.ghep3D.push(fillWithProbability(new Set(), 7, 0, 9));
-                results.dan2D.push(fillWithProbability(new Set(), 64, 0, 99).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
+
+                // Dàn 2D
+                const dan2D = fillWithProbability(new Set(), 64, 0, 99)
+                    .map(n => n.toString().padStart(2, '0'))
+                    .sort((a, b) => a - b);
+                results.dan2D.push(dan2D);
+
+                // Song Thủ Lô
                 results.songThuLo.push(fillWithProbability(new Set(), 2, 0, 99).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
+
+                // Tam Thủ Lô
                 results.tamThuLo.push(fillWithProbability(new Set(), 3, 0, 99).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
+
+                // Tứ Thủ Lô
                 results.tuThuLo.push(fillWithProbability(new Set(), 4, 0, 99).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
+
+                // Ngũ Thủ Lô
                 results.nguThuLo.push(fillWithProbability(new Set(), 5, 0, 99).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
+
+                // Mega 6/45
                 results.mega6_45.push(fillWithProbability(new Set(), 6, 1, 45).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
+
+                // Power 6/55
                 results.power6_55.push(fillWithProbability(new Set(), 6, 1, 55).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
             }
 
             return results;
         };
 
-        const saveToHistory = (region, results) => {
-            const today = new Date().toISOString().split('T')[0];
-            const history = JSON.parse(localStorage.getItem('history')) || [];
-            history.push({ date: today, region, results });
-            localStorage.setItem('history', JSON.stringify(history));
+        const displayResults = (results, region) => {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <h2>Kết quả mô phỏng: ${region}</h2>
+                <p><strong>Ghép 4D:</strong> ${results.ghep4D[0].join(', ')}</p>
+                <p><strong>Ghép 3D:</strong> ${results.ghep3D[0].join(', ')}</p>
+                <p><strong>Dàn 2D:</strong> ${results.dan2D[0].join(', ')}</p>
+                <p><strong>Song Thủ Lô:</strong> ${results.songThuLo[0].join(', ')}</p>
+                <p><strong>Tam Thủ Lô:</strong> ${results.tamThuLo[0].join(', ')}</p>
+                <p><strong>Tứ Thủ Lô:</strong> ${results.tuThuLo[0].join(', ')}</p>
+                <p><strong>Ngũ Thủ Lô:</strong> ${results.nguThuLo[0].join(', ')}</p>
+                <p><strong>Mega 6/45:</strong> ${results.mega6_45[0].join(', ')}</p>
+                <p><strong>Power 6/55:</strong> ${results.power6_55[0].join(', ')}</p>
+            `;
         };
-
-        const displayHistory = () => {
-            const historyContent = document.getElementById('historyContent');
-            const history = JSON.parse(localStorage.getItem('history')) || [];
-            if (history.length === 0) {
-                historyContent.innerHTML = '<p>Chưa có lịch sử nào.</p>';
-            } else {
-                historyContent.innerHTML = history.map(entry => `
-                    <p><strong>Ngày:</strong> ${entry.date} | <strong>Miền:</strong> ${entry.region}</p>
-                `).join('');
-            }
-        };
-
-        document.getElementById('viewHistory').addEventListener('click', () => {
-            document.getElementById('history').style.display = 'block';
-            displayHistory();
-        });
 
         document.getElementById('startSimulation').addEventListener('click', () => {
             const simulations = parseInt(document.getElementById('simulations').value);
@@ -183,7 +189,6 @@
                 const results = monteCarloSimulation(simulations);
                 document.getElementById('loading').style.display = 'none';
                 document.getElementById('result').style.display = 'block';
-                saveToHistory(region, results);
                 displayResults(results, region);
             }, 2000);
         });

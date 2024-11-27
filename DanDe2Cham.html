@@ -96,16 +96,29 @@
                 5: 0
             };
 
-            // Quy đổi số từ ô Trung Tâm Giải Số Đặc Biệt (Bóng âm)
-            var resultAm = bongAm[sodacbiet] !== undefined ? bongAm[sodacbiet] : "Không có quy đổi";
-
-            // Quy đổi số từ ô Trung Tâm Số Giải Nhất (Bóng dương)
-            var resultDuong = bongDuong[sogiaihat] !== undefined ? bongDuong[sogiaihat] : "Không có quy đổi";
+            // Tìm "lộn ngược" của số trong Bóng âm
+            var resultAm = getReverseMatch(sodacbiet, bongAm);
+            var resultDuong = getReverseMatch(sogiaihat, bongDuong);
 
             // Hiển thị kết quả
             document.getElementById("result").innerHTML = 
                 `Bóng âm của số ${sodacbiet} là: ${resultAm}<br>
                 Bóng dương của số ${sogiaihat} là: ${resultDuong}`;
+        }
+
+        // Hàm tìm giá trị ngược lại từ bảng quy đổi
+        function getReverseMatch(input, lookup) {
+            // Nếu giá trị có trong bảng, trả kết quả bình thường
+            if (lookup[input] !== undefined) {
+                return lookup[input];
+            } 
+            // Nếu không có, tìm ngược lại (lộn số theo quy tắc)
+            for (let key in lookup) {
+                if (lookup[key] === input) {
+                    return key; // Trả về số ngược lại
+                }
+            }
+            return "Không có quy đổi"; // Trường hợp không tìm thấy
         }
     </script>
 </body>

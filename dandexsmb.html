@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dàn Đề XSMB</title>
     <style>
+        /* Giữ nguyên style như trong code chính */
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f4f9;
@@ -77,7 +78,6 @@
     </div>
 
     <script>
-        // Hàm xử lý kết quả
         const processLottoData = () => {
             const sessions = parseInt(document.getElementById('sessions').value);
             const results = document.getElementById('lottoResults').value.split(',').map(result => result.trim());
@@ -85,14 +85,13 @@
 
             results.forEach(sessionData => {
                 const sessionDigits = sessionData.split('');
-                const thousands = sessionDigits.slice(-5, -4).join(''); // Hàng chục nghìn
-                const hundreds = sessionDigits.slice(-4, -3).join(''); // Hàng nghìn
-                const tens = sessionDigits.slice(-3, -2).join(''); // Hàng trăm
-                const lastTwoDigits = sessionDigits.slice(-2).join(''); // Hàng chục (2 số cuối)
+                const thousands = sessionDigits.slice(-5, -4).join('');
+                const hundreds = sessionDigits.slice(-4, -3).join('');
+                const tens = sessionDigits.slice(-3, -2).join('');
+                const lastTwoDigits = sessionDigits.slice(-2).join('');
                 data.push({ thousands, hundreds, tens, lastTwoDigits });
             });
 
-            // Tính toán số duy nhất
             const getUniqueNumbers = (data, field, maxCount = 7) => {
                 const uniqueNumbers = new Set();
                 data.forEach(session => uniqueNumbers.add(session[field]));
@@ -100,7 +99,6 @@
                 return result.slice(0, maxCount);
             };
 
-            // Tính tần suất xuất hiện của từng số
             const calculateFrequency = (data, field) => {
                 const frequency = {};
                 data.forEach(session => {
@@ -112,12 +110,10 @@
                     .map(([num, freq]) => ({ num, freq }));
             };
 
-            // Tính toán các số tốt nhất
             const getBestNumbers = (frequency, topCount = 5) => {
                 return frequency.slice(0, topCount);
             };
 
-            // Tính toán các kết quả
             const uniqueThousands = getUniqueNumbers(data, 'thousands');
             const uniqueHundreds = getUniqueNumbers(data, 'hundreds');
             const uniqueTens = getUniqueNumbers(data, 'tens');
@@ -136,7 +132,6 @@
             document.getElementById('output').innerHTML = output;
         };
 
-        // Lắng nghe sự kiện khi người dùng nhấn nút
         document.getElementById('submitBtn').addEventListener('click', processLottoData);
     </script>
 </body>

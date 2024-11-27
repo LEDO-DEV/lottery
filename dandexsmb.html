@@ -53,6 +53,13 @@
         .btn:hover {
             background-color: #45a049;
         }
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+        }
+        .btn-container .btn {
+            width: 48%;
+        }
         .output-section {
             margin-top: 20px;
         }
@@ -72,7 +79,10 @@
             <input type="text" id="lottoResults" placeholder="Nhập kết quả các phiên xổ số">
         </div>
 
-        <button class="btn" id="submitBtn">Xử lý kết quả</button>
+        <div class="btn-container">
+            <button class="btn" id="submitBtn">Xử lý kết quả</button>
+            <button class="btn" id="homeBtn">Trang Chủ</button>
+        </div>
 
         <div class="output-section" id="output"></div>
     </div>
@@ -121,7 +131,7 @@
             const frequency = calculateFrequency(data, 'lastTwoDigits');
             const bestNumbers = getBestNumbers(frequency);
 
-            const output = `
+            const output = ` 
                 <h2>Kết quả thống kê:</h2>
                 <p><strong>5D Ghep:</strong> ${uniqueThousands.join(', ')}</p>
                 <p><strong>4D Ghep:</strong> ${uniqueHundreds.join(', ')}</p>
@@ -133,6 +143,10 @@
         };
 
         document.getElementById('submitBtn').addEventListener('click', processLottoData);
+
+        document.getElementById('homeBtn').addEventListener('click', () => {
+            window.location.href = "https://ledo-dev.github.io/lottery/";
+        });
     </script>
 </body>
 </html>

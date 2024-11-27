@@ -164,6 +164,9 @@
         };
 
         const provinces = {
+            "Miền Bắc": [
+                "Hà Nội", "Thái Bình", "Bắc Ninh", "Hải Phòng", "Nam Định", "Quảng Ninh"
+            ],
             "Miền Trung": [
                 "Bình Định", "Đà Nẵng", "Đắk Lắk", "Đắk Nông", "Gia Lai", "Huế", 
                 "Khánh Hòa", "Kon Tum", "Ninh Thuận", "Phú Yên", "Quảng Bình", 
@@ -181,7 +184,7 @@
             const provinceSelect = document.getElementById('province');
             provinceSelect.innerHTML = '<option value="">Chọn đài xổ số</option>';
 
-            if (region === "Miền Trung" || region === "Miền Nam") {
+            if (region === "Miền Bắc" || region === "Miền Trung" || region === "Miền Nam") {
                 const regionProvinces = provinces[region];
                 regionProvinces.forEach(province => {
                     const option = document.createElement('option');

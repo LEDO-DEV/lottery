@@ -118,30 +118,28 @@
                 results.ghep3D.push(fillWithProbability(new Set(), 7, 0, 9));
 
                 // Dàn 2D
-                const dan2D = fillWithProbability(new Set(), 64, 0, 99).map(n => n.toString().padStart(2, '0'));
+                const dan2D = fillWithProbability(new Set(), 64, 0, 99)
+                    .map(n => n.toString().padStart(2, '0'))
+                    .sort((a, b) => a - b);
                 results.dan2D.push(dan2D);
 
                 // Song Thủ Lô
-                const songThuLo = fillWithProbability(new Set(), 2, 0, 99).map(n => n.toString().padStart(2, '0'));
-                results.songThuLo.push(songThuLo);
+                results.songThuLo.push(fillWithProbability(new Set(), 2, 0, 99).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
 
                 // Tam Thủ Lô
-                const tamThuLo = fillWithProbability(new Set(), 3, 0, 99).map(n => n.toString().padStart(2, '0'));
-                results.tamThuLo.push(tamThuLo);
+                results.tamThuLo.push(fillWithProbability(new Set(), 3, 0, 99).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
 
                 // Tứ Thủ Lô
-                const tuThuLo = fillWithProbability(new Set(), 4, 0, 99).map(n => n.toString().padStart(2, '0'));
-                results.tuThuLo.push(tuThuLo);
+                results.tuThuLo.push(fillWithProbability(new Set(), 4, 0, 99).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
 
                 // Ngũ Thủ Lô
-                const nguThuLo = fillWithProbability(new Set(), 5, 0, 99).map(n => n.toString().padStart(2, '0'));
-                results.nguThuLo.push(nguThuLo);
+                results.nguThuLo.push(fillWithProbability(new Set(), 5, 0, 99).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
 
                 // Mega 6/45
-                results.mega6_45.push(fillWithProbability(new Set(), 6, 1, 45));
+                results.mega6_45.push(fillWithProbability(new Set(), 6, 1, 45).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
 
                 // Power 6/55
-                results.power6_55.push(fillWithProbability(new Set(), 6, 1, 55));
+                results.power6_55.push(fillWithProbability(new Set(), 6, 1, 55).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
             }
 
             return results;

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Phân tích Xổ Số Megabet 49</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            padding: 20px;
+        }
+
+        .container {
+            width: 50%;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .input-section {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 10px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        .output-section {
+            margin-top: 30px;
+        }
+
+        ul {
+            list-style-type: none;
+        }
+
+        pre {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .results, .zodiac-info {
+            margin-top: 20px;
+        }
+
+        .zodiac-info li {
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Phân tích Xổ Số Megabet 49</h1>
+
+        <div class="input-section">
+            <label for="draws">Nhập số lượng vé:</label>
+            <input type="number" id="draws" min="1" max="100" placeholder="Nhập số vé" />
+        </div>
+
+        <div class="input-section">
+            <label for="numbers">Nhập kết quả các số (cách nhau bởi dấu cách):</label>
+            <textarea id="numbers" rows="6" placeholder="Nhập các số xuất hiện cho mỗi vé"></textarea>
+        </div>
+
+        <button id="submit">Phân tích</button>
+
+        <div class="output-section">
+            <h2>Tần suất xuất hiện của các số (kèm Con Giáp)</h2>
+            <ul id="frequency-list"></ul>
+
+            <h2>Xu hướng xuất hiện của các số</h2>
+            <pre id="trends-output"></pre>
+
+            <h2>Các số bạn nên chọn</h2>
+            <ul id="chosen-numbers"></ul>
+        </div>
+    </div>
+
+    <script>
+        const zodiacNumbers = {
+            Thin: ['01', '13', '25', '37', '49'],
+            Dan: ['03', '15', '27', '39'],
+            Ty: ['05', '17', '29', '41'],
+            Tuat: ['07', '19', '31', '43'],
+            Than: ['09', '21', '33', '45'],
+            Ngo: ['11', '23', '35', '47'],
+            Mao: ['02', '14', '26', '38'],
+            Suu: ['04', '16', '28', '40'],
+            Hoi: ['06', '18', '30', '42'],
+            Dau: ['08', '20', '32', '44'],
+            Mui: ['10', '22', '34', '46'],
+            TyKhac: ['12', '24', '36', '48'],
+        };
+
+        const formatNumber = (num) => {
+            return num < 10 ? '0' + num : num.toString();
+        };
+
+        const getZodiacByNumber = (number) => {
+            for (const [zodiac, numbers] of Object.entries(zodiacNumbers)) {
+                if (numbers.includes(number)) {
+                    return zodiac;
+                }
+            }
+            return 'Không xác định';
+        };
+
+        const inputMegabetData = () => {
+            const draws = parseInt(document.getElementById('draws').value);
+            const rawInput = document.getElementById('numbers').value.trim();
+            const data = [];
+
+            const drawInputs = rawInput.split('\n').map(draw => draw.trim()).filter(draw => draw);
+            if (drawInputs.length !== draws) {
+                alert("Số lượng vé nhập không khớp với số lượng vé bạn đã chọn.");
+                return;
+            }
+
+            drawInputs.forEach(input => {
+                const drawData = input.split(' ').map(num => formatNumber(num));
+                data.push(drawData);
+            });
+
+            return data;
+        };
+
+        const calculateFrequency = (data) => {
+            const frequency = {};
+
+            data.forEach((draw) => {
+                draw.forEach((number) => {
+                    frequency[number] = (frequency[number] || 0) + 1;
+                });
+            });
+
+            return frequency;
+        };
+
+        const calculateStandardDeviation = (frequency) => {
+            const frequencies = Object.values(frequency);
+            const mean = frequencies.reduce((sum, freq) => sum + freq, 0) / frequencies.length;
+
+            const variance = frequencies.reduce((sum, freq) => sum + Math.pow(freq - mean, 2), 0) / frequencies.length;
+            return Math.sqrt(variance);
+        };
+
+        const getHotAndColdNumbers = (frequency) => {
+            const sortedNumbers = Object.entries(frequency).sort((a, b) => b[1] - a[1]);
+            return sortedNumbers;
+        };
+
+        const displayTrends = (data, sortedNumbers) => {
+            const trends = {};
+            sortedNumbers.forEach(([number]) => {
+                trends[number] = data.map((draw) => (draw.includes(number) ? 1 : 0));
+            });
+
+            const trendsOutput = document.getElementById('trends-output');
+            trendsOutput.textContent = '';
+            Object.entries(trends).forEach(([number, trend]) => {
+                trendsOutput.textContent += `${number}: ${trend.join(' ')}\n`;
+            });
+        };
+
+        const printResults = (sortedNumbers, standardDeviation) => {
+            const frequencyList = document.getElementById('frequency-list');
+            frequencyList.innerHTML = '';
+            sortedNumbers.forEach(([number, count]) => {
+                const zodiac = getZodiacByNumber(number);
+                const li = document.createElement('li');
+                li.textContent = `${number} (${zodiac}): ${count} lần`;
+                frequencyList.appendChild(li);
+            });
+
+            const standardDevElement = document.createElement('p');
+            standardDevElement.textContent = `ĐỘ LỆCH CHUẨN CỦA TẦN SUẤT: ${standardDeviation.toFixed(2)}`;
+            document.querySelector('.output-section').appendChild(standardDevElement);
+        };
+
+        const chooseNumbers = (sortedNumbers, count) => {
+            return sortedNumbers.slice(0, count).map(([number]) => number);
+        };
+
+        const displayChosenNumbers = (chosenNumbers) => {
+            const chosenList = document.getElementById('chosen-numbers');
+            chosenList.innerHTML = '';
+            chosenNumbers.forEach((number) => {
+                const zodiac = getZodiacByNumber(number);
+                const li = document.createElement('li');
+                li.textContent = `${number} (${zodiac})`;
+                chosenList.appendChild(li);
+            });
+        };
+
+        document.getElementById('submit').addEventListener('click', () => {
+            const data = inputMegabetData();
+
+            if (data.length === 0) return;
+
+            const frequency = calculateFrequency(data);
+            const sortedNumbers = getHotAndColdNumbers(frequency);
+            const standardDeviation = calculateStandardDeviation(frequency);
+
+            printResults(sortedNumbers, standardDeviation);
+            displayTrends(data, sortedNumbers);
+
+            const numToChoose = parseInt(prompt("Ban muon lay bao nhieu so?"));
+            if (isNaN(numToChoose) || numToChoose <= 0 || numToChoose > 49) {
+                alert("Số lượng không hợp lệ!");
+                return;
+            }
+
+            const chosenNumbers = chooseNumbers(sortedNumbers, numToChoose);
+            displayChosenNumbers(chosenNumbers);
+        });
+    </script>
+</body>
+</html>

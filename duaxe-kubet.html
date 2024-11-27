@@ -81,62 +81,74 @@
         </div>
     </main>
     <script>
-        // Hàm format số (đảm bảo 2 chữ số)
-        const formatNumber = (num) => (num < 10 ? '0' + num : num.toString());
+        // Hàm định dạng số (đảm bảo số có dạng 01, 02,... 10)
+        const formatNumber = (num) => num.toString().padStart(2, '0');
 
-        // Xử lý khi bấm nút "Tạo ô nhập liệu"
-        document.getElementById('generate-inputs').addEventListener('click', () => {
-            const races = parseInt(document.getElementById('races').value, 10);
+        document.addEventListener('DOMContentLoaded', () => {
+            const generateInputsButton = document.getElementById('generate-inputs');
+            const raceForm = document.getElementById('race-form');
             const raceInputs = document.getElementById('race-inputs');
-            raceInputs.innerHTML = ''; // Xóa nội dung cũ
+            const outputDiv = document.getElementById('output');
 
-            if (isNaN(races) || races <= 0) {
-                alert('Vui lòng nhập số vòng đua hợp lệ!');
-                return;
-            }
+            // Sự kiện tạo ô nhập liệu
+            generateInputsButton.addEventListener('click', () => {
+                const races = parseInt(document.getElementById('races').value, 10);
+                raceInputs.innerHTML = ''; // Xóa các ô nhập liệu cũ
 
-            // Tạo các ô nhập liệu
-            for (let i = 1; i <= races; i++) {
-                const input = document.createElement('input');
-                input.type = 'text';
-                input.placeholder = `Nhập kết quả vòng ${i} (10 số cách nhau dấu cách)`;
-                input.id = `race-${i}`;
-                input.required = true;
-                raceInputs.appendChild(input);
-            }
-        });
-
-        // Xử lý khi bấm nút "Phân tích kết quả"
-        document.getElementById('race-form').addEventListener('submit', (event) => {
-            event.preventDefault();
-
-            const races = parseInt(document.getElementById('races').value, 10);
-            const allNumbers = Array.from({ length: 10 }, (_, i) => formatNumber(i + 1)); // Các số từ 01-10
-            const data = [];
-
-            // Lấy dữ liệu từ từng ô nhập
-            for (let i = 1; i <= races; i++) {
-                const raceData = document.getElementById(`race-${i}`).value.trim().split(/\s+/);
-                if (raceData.length !== 10) {
-                    alert(`Vòng ${i} phải có đúng 10 số!`);
+                if (isNaN(races) || races <= 0) {
+                    alert('Vui lòng nhập số vòng đua hợp lệ!');
                     return;
                 }
-                data.push(raceData.map(formatNumber));
-            }
 
-            // Tính tần suất xuất hiện
-            const frequency = Object.fromEntries(allNumbers.map(num => [num, 0]));
-            data.flat().forEach(num => {
-                if (frequency[num] !== undefined) frequency[num]++;
+                // Tạo ô nhập liệu mới
+                for (let i = 1; i <= races; i++) {
+                    const input = document.createElement('input');
+                    input.type = 'text';
+                    input.placeholder = `Nhập kết quả vòng ${i} (10 số cách nhau dấu cách)`;
+                    input.id = `race-${i}`;
+                    input.required = true;
+                    input.style.marginBottom = "10px";
+                    raceInputs.appendChild(input);
+                }
             });
 
-            // Hiển thị kết quả
-            const output = Object.entries(frequency)
-                .sort((a, b) => b[1] - a[1]) // Sắp xếp theo tần suất giảm dần
-                .map(([num, count]) => `${num}: ${count} lần`)
-                .join('\n');
+            // Sự kiện phân tích kết quả
+            raceForm.addEventListener('submit', (event) => {
+                event.preventDefault(); // Ngăn hành vi mặc định của form
 
-            document.getElementById('output').textContent = `Tần suất xuất hiện các số:\n${output}`;
+                const races = parseInt(document.getElementById('races').value, 10);
+                const allNumbers = Array.from({ length: 10 }, (_, i) => formatNumber(i + 1)); // Các số từ 01-10
+                const data = [];
+
+                // Thu thập dữ liệu từ các ô nhập liệu
+                for (let i = 1; i <= races; i++) {
+                    const input = document.getElementById(`race-${i}`);
+                    const raceData = input.value.trim().split(/\s+/); // Tách dữ liệu theo khoảng trắng
+
+                    if (raceData.length !== 10) {
+                        alert(`Vòng ${i} phải có đúng 10 số!`);
+                        input.focus();
+                        return;
+                    }
+
+                    const formattedData = raceData.map(formatNumber); // Định dạng số
+                    data.push(formattedData);
+                }
+
+                // Tính tần suất xuất hiện
+                const frequency = Object.fromEntries(allNumbers.map(num => [num, 0]));
+                data.flat().forEach(num => {
+                    if (frequency[num] !== undefined) frequency[num]++;
+                });
+
+                // Xuất kết quả ra giao diện
+                const resultText = Object.entries(frequency)
+                    .sort((a, b) => b[1] - a[1]) // Sắp xếp giảm dần theo tần suất
+                    .map(([num, count]) => `${num}: ${count} lần`)
+                    .join('\n');
+
+                outputDiv.textContent = `Tần suất xuất hiện các số:\n${resultText}`;
+            });
         });
     </script>
 </body>

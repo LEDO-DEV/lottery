@@ -78,6 +78,23 @@
             border-radius: 4px;
             font-size: 14px;
         }
+
+        /* Nút Trang Chủ */
+        .home-button {
+            margin-top: 20px;
+            width: 100%;
+            padding: 10px;
+            background-color: #2196F3;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .home-button:hover {
+            background-color: #0b7dda;
+        }
     </style>
 </head>
 <body>
@@ -103,6 +120,9 @@
             <h2>Xu hướng xuất hiện của các số</h2>
             <pre id="trends-output"></pre>
         </div>
+
+        <!-- Nút Trang Chủ -->
+        <button class="home-button" id="homeBtn">Trang Chủ</button>
     </div>
 
     <script>
@@ -220,6 +240,11 @@
 
             const trends = analyzeTrend(data, hotNumbers.slice(0, numToChoose));
             displayResults(hotNumbers, trends);
+        });
+
+        // Sự kiện cho nút "Trang Chủ"
+        document.getElementById('homeBtn').addEventListener('click', () => {
+            window.location.href = "https://ledo-dev.github.io/lottery/"; // Chuyển hướng đến trang chủ
         });
     </script>
 </body>

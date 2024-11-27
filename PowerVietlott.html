@@ -53,7 +53,7 @@
         }
 
         button {
-            width: 100%;
+            width: 48%;
             padding: 12px;
             background-color: #3498db;
             color: white;
@@ -65,6 +65,12 @@
 
         button:hover {
             background-color: #2980b9;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
         }
 
         .output-section {
@@ -127,7 +133,10 @@
             <textarea id="numbers" rows="6" placeholder="Nhập các số đã xuất hiện cho mỗi vé"></textarea>
         </div>
 
-        <button id="submit">Phân tích</button>
+        <div class="btn-container">
+            <button id="submit">Phân tích</button>
+            <button id="homeBtn">Trang Chủ</button>
+        </div>
 
         <div class="output-section">
             <h2>TOP 10 SỐ NÓNG</h2>
@@ -275,6 +284,10 @@
 
             const chosenNumbers = chooseNumbers(hotNumbers, numToChoose);
             displayChosenNumbers(chosenNumbers);
+        });
+
+        document.getElementById('homeBtn').addEventListener('click', () => {
+            window.location.href = 'https://ledo-dev.github.io/lottery/';
         });
     </script>
 </body>

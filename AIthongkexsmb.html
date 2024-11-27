@@ -126,7 +126,8 @@
                 tuThuLo: [],
                 nguThuLo: [],
                 mega6_45: [],
-                power6_55: []
+                power6_55: [],
+                dan4Cham: []  // Mảng Dàn 4 Chạm
             };
 
             for (let i = 0; i < iterations; i++) {
@@ -142,6 +143,10 @@
                 results.nguThuLo.push(fillWithProbability(new Set(), 5, 0, 99).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
                 results.mega6_45.push(fillWithProbability(new Set(), 6, 1, 45).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
                 results.power6_55.push(fillWithProbability(new Set(), 6, 1, 55).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
+
+                // Dàn 4 Chạm: 4 số không trùng nhau từ 0-9
+                const dan4Cham = fillWithProbability(new Set(), 4, 0, 9).sort((a, b) => a - b);
+                results.dan4Cham.push(dan4Cham);
             }
 
             return results;
@@ -154,12 +159,14 @@
                 <p><strong>Ghép 4D:</strong> ${results.ghep4D[0].join(', ')}</p>
                 <p><strong>Ghép 3D:</strong> ${results.ghep3D[0].join(', ')}</p>
                 <p><strong>Dàn 2D:</strong> ${results.dan2D[0].join(', ')}</p>
+                <p><strong>Dàn 4 Chạm:</strong> ${results.dan4Cham[0].join(', ')}</p>
                 <p><strong>Song Thủ Lô:</strong> ${results.songThuLo[0].join(', ')}</p>
                 <p><strong>Tam Thủ Lô:</strong> ${results.tamThuLo[0].join(', ')}</p>
                 <p><strong>Tứ Thủ Lô:</strong> ${results.tuThuLo[0].join(', ')}</p>
                 <p><strong>Ngũ Thủ Lô:</strong> ${results.nguThuLo[0].join(', ')}</p>
                 <p><strong>Mega 6/45:</strong> ${results.mega6_45[0].join(', ')}</p>
                 <p><strong>Power 6/55:</strong> ${results.power6_55[0].join(', ')}</p>
+                
             `;
         };
 

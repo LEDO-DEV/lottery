@@ -1,155 +1,196 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Kết quả đua xe</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 20px;
-    }
-    .output {
-      margin-top: 20px;
-      font-weight: bold;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đua Xe Kubet</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 80%;
+            max-width: 600px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        .input-section {
+            margin-bottom: 20px;
+        }
+        .input-section input {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        .output-section {
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
+    <div class="container">
+        <h1>Đua Xe Kubet</h1>
+        
+        <div class="input-section">
+            <label for="races">Số vòng đua:</label>
+            <input type="number" id="races" placeholder="Nhập số vòng đua">
+        </div>
 
-  <h1>Chương trình phân tích kết quả đua xe</h1>
+        <div class="input-section" id="raceInputs"></div>
 
-  <label for="racesCount">Ban muốn nhập kết quả của bao nhiêu vòng đua?</label>
-  <input type="number" id="racesCount" min="1" max="100" placeholder="Nhập số vòng đua" required>
-  <button onclick="startInput()">Nhập kết quả</button>
+        <button class="btn" id="submitBtn">Xử lý kết quả đua xe</button>
 
-  <div id="inputSection" style="display: none;">
-    <h3>Nhập kết quả từng vòng đua</h3>
-    <div id="raceInputs"></div>
-    <button onclick="processData()">Xử lý kết quả</button>
-  </div>
+        <div class="output-section" id="output"></div>
+    </div>
 
-  <div class="output" id="output"></div>
-
-  <script>
-    const formatNumber = (num) => num < 10 ? '0' + num : num.toString();
-
-    const generateAllNumbers = () => Array.from({ length: 10 }, (_, i) => formatNumber(i + 1));
-
-    let allNumbers = generateAllNumbers();
-    let data = [];
-
-    function startInput() {
-      const racesCount = parseInt(document.getElementById("racesCount").value);
-      if (isNaN(racesCount) || racesCount < 1) {
-        alert("Vui lòng nhập số vòng đua hợp lệ.");
-        return;
-      }
-      
-      document.getElementById("inputSection").style.display = 'block';
-      const raceInputs = document.getElementById("raceInputs");
-      raceInputs.innerHTML = ''; // Clear previous inputs
-
-      for (let i = 1; i <= racesCount; i++) {
-        const raceInput = document.createElement("div");
-        raceInput.innerHTML = `
-          <label for="race${i}">Vòng đua ${i}:</label>
-          <input type="text" id="race${i}" placeholder="Nhập kết quả (1-10, cách nhau bởi dấu cách)">
-        `;
-        raceInputs.appendChild(raceInput);
-      }
-    }
-
-    function processData() {
-      data = [];
-      const racesCount = parseInt(document.getElementById("racesCount").value);
-
-      for (let i = 1; i <= racesCount; i++) {
-        const raceInput = document.getElementById(`race${i}`).value.trim().split(/\s+/);
-        if (raceInput.length !== 10) {
-          alert("Mỗi vòng đua phải có đúng 10 số từ 01 đến 10.");
-          return;
+    <script>
+        const formatNumber = (num) => {
+            return num < 10 ? '0' + num : num.toString();
         }
-        data.push(raceInput.map(num => formatNumber(num)));
-      }
 
-      const frequency = calculateFrequency(data, allNumbers);
-      const momentum = calculateMomentum(data);
-      const [rank1, rank2, rank3] = getRankResults(data);
-      const bestNumbers = chooseBestNumbers(frequency, momentum);
+        const generateAllNumbers = () => Array.from({ length: 10 }, (_, i) => formatNumber(i + 1));
 
-      displayResults(frequency, rank1, rank2, rank3, bestNumbers);
-    }
-
-    function calculateFrequency(data, allNumbers) {
-      const frequency = Object.fromEntries(allNumbers.map(num => [num, 0]));
-      data.flat().forEach(num => {
-        if (frequency[num] !== undefined) {
-          frequency[num]++;
+        const generateRaceInputs = (races) => {
+            const raceInputsContainer = document.getElementById('raceInputs');
+            raceInputsContainer.innerHTML = '';
+            for (let i = 0; i < races; i++) {
+                const inputField = document.createElement('div');
+                inputField.innerHTML = `
+                    <label for="race${i + 1}">Vòng đua ${i + 1}: Nhập kết quả (các số từ 01 đến 10, cách nhau bởi dấu cách):</label>
+                    <input type="text" id="race${i + 1}" placeholder="Nhập kết quả vòng ${i + 1}">
+                `;
+                raceInputsContainer.appendChild(inputField);
+            }
         }
-      });
-      return frequency;
-    }
 
-    function calculateMomentum(data) {
-      const momentum = {};
-      data.forEach((race, index) => {
-        if (index === 0) return; // Không tính chu kỳ cho vòng đua đầu tiên
-        race.forEach((num, position) => {
-          if (!momentum[num]) momentum[num] = { momentum: 0, lastRank: position + 1 };
-          const rankChange = momentum[num].lastRank - (position + 1); // So sánh thứ hạng
-          momentum[num].momentum += rankChange;
-          momentum[num].lastRank = position + 1;
+        const inputRaceData = (races) => {
+            const data = [];
+            for (let i = 0; i < races; i++) {
+                const raceData = document.getElementById(`race${i + 1}`).value.trim().split(/\s+/).map(num => formatNumber(num));
+                if (raceData.length !== 10) {
+                    alert("Lỗi: Mỗi vòng đua phải nhập đủ 10 số!");
+                    return [];
+                }
+                data.push(raceData);
+            }
+            return data;
+        }
+
+        const calculateFrequency = (data, allNumbers) => {
+            const frequency = Object.fromEntries(allNumbers.map(num => [num, 0]));
+            data.flat().forEach(num => {
+                if (frequency[num] !== undefined) {
+                    frequency[num]++;
+                }
+            });
+            return frequency;
+        }
+
+        const calculateMomentum = (data) => {
+            const momentum = {};
+            data.forEach((race, index) => {
+                if (index === 0) return;
+                race.forEach((num, position) => {
+                    if (!momentum[num]) momentum[num] = { momentum: 0, lastRank: position + 1 };
+                    const rankChange = momentum[num].lastRank - (position + 1);
+                    momentum[num].momentum += rankChange;
+                    momentum[num].lastRank = position + 1;
+                });
+            });
+            return momentum;
+        }
+
+        const getRankResults = (data) => {
+            const ranks = [[], [], []];
+            data.forEach(race => {
+                for (let i = 0; i < 3; i++) {
+                    if (race[i]) ranks[i].push(race[i]);
+                }
+            });
+
+            return ranks.map(rankData => {
+                const freq = rankData.reduce((acc, num) => {
+                    acc[num] = (acc[num] || 0) + 1;
+                    return acc;
+                }, {});
+                return Object.entries(freq).sort((a, b) => b[1] - a[1]);
+            });
+        }
+
+        const chooseBestNumbers = (frequency, momentum) => {
+            const combinedScores = Object.entries(frequency).map(([num, freq]) => {
+                const momentumScore = momentum[num]?.momentum || 0;
+                return [num, freq + momentumScore * 2];
+            });
+
+            return combinedScores.sort((a, b) => b[1] - a[1]);
+        }
+
+        document.getElementById('submitBtn').addEventListener('click', () => {
+            const races = parseInt(document.getElementById('races').value, 10);
+            if (isNaN(races) || races <= 0) {
+                alert("Vui lòng nhập số vòng đua hợp lệ!");
+                return;
+            }
+            generateRaceInputs(races);
+
+            const data = inputRaceData(races);
+            if (data.length === 0) return;
+
+            const allNumbers = generateAllNumbers();
+            const frequency = calculateFrequency(data, allNumbers);
+            const momentum = calculateMomentum(data);
+            const [rank1, rank2, rank3] = getRankResults(data);
+            const bestNumbers = chooseBestNumbers(frequency, momentum);
+
+            let output = "<h2>Kết quả thống kê:</h2>";
+
+            output += "<h3>Tần suất xuất hiện của các số:</h3><ul>";
+            for (const [num, count] of Object.entries(frequency).sort((a, b) => b[1] - a[1])) {
+                output += `<li>${num}: ${count} lần</li>`;
+            }
+            output += "</ul>";
+
+            output += "<h3>Kết quả đua xe Kubet:</h3>";
+            output += `<p>Hạng 1: ${rank1.slice(0, 3).map(item => `${item[0]} (${item[1]} lần)`).join(', ')}</p>`;
+            output += `<p>Hạng 2: ${rank2.slice(0, 3).map(item => `${item[0]} (${item[1]} lần)`).join(', ')}</p>`;
+            output += `<p>Hạng 3: ${rank3.slice(0, 3).map(item => `${item[0]} (${item[1]} lần)`).join(', ')}</p>`;
+
+            output += "<h3>Các số tốt nhất (dựa trên tần suất và momentum):</h3>";
+            output += `<ul>${bestNumbers.slice(0, 5).map(item => `<li>${item[0]} (Điểm: ${item[1]})</li>`).join('')}</ul>`;
+
+            document.getElementById('output').innerHTML = output;
         });
-      });
-      return momentum;
-    }
-
-    function getRankResults(data) {
-      const ranks = [[], [], []];
-      data.forEach(race => {
-        for (let i = 0; i < 3; i++) {
-          if (race[i]) ranks[i].push(race[i]);
-        }
-      });
-
-      return ranks.map(rankData => {
-        const freq = rankData.reduce((acc, num) => {
-          acc[num] = (acc[num] || 0) + 1;
-          return acc;
-        }, {});
-        return Object.entries(freq).sort((a, b) => b[1] - a[1]);
-      });
-    }
-
-    function chooseBestNumbers(frequency, momentum) {
-      const combinedScores = Object.entries(frequency).map(([num, freq]) => {
-        const momentumScore = momentum[num]?.momentum || 0;
-        return [num, freq + momentumScore * 2]; // Tăng trọng số momentum
-      });
-
-      return combinedScores.sort((a, b) => b[1] - a[1]);
-    }
-
-    function displayResults(frequency, rank1, rank2, rank3, bestNumbers) {
-      let output = "<h3>Tần suất xuất hiện của các số:</h3><ul>";
-      for (const [num, count] of Object.entries(frequency).sort((a, b) => b[1] - a[1])) {
-        output += `<li>${num}: ${count} lần</li>`;
-      }
-      output += "</ul>";
-
-      output += "<h3>Kết quả đua xe:</h3>";
-      output += "<p>Hạng 1: " + rank1.slice(0, 3).map(item => `${item[0]} (${item[1]} lần)`).join(", ") + "</p>";
-      output += "<p>Hạng 2: " + rank2.slice(0, 3).map(item => `${item[0]} (${item[1]} lần)`).join(", ") + "</p>";
-      output += "<p>Hạng 3: " + rank3.slice(0, 3).map(item => `${item[0]} (${item[1]} lần)`).join(", ") + "</p>";
-
-      output += "<h3>Các số tốt nhất:</h3><ul>";
-      output += bestNumbers.slice(0, 5).map(item => `<li>${item[0]} (Điểm: ${item[1]})</li>`).join("");
-      output += "</ul>";
-
-      document.getElementById("output").innerHTML = output;
-    }
-  </script>
-
+    </script>
 </body>
 </html>

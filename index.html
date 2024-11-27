@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Trang Chính</title>
+    <title>XSMB - LE DO</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -50,10 +50,11 @@
 </head>
 <body>
     <div class="container">
-        <h1>Chọn Chế Độ</h1>
+        <h1>Chọn Trò Chơi</h1>
         <div class="button-container">
             <button id="lottoButton">Dàn Đề XSMB</button>
             <button id="raceButton">Đua Xe Kubet</button>
+            <button id="loxienButton">Đua Xe Kubet</button>
         </div>
     </div>
 
@@ -64,6 +65,10 @@
 
         document.getElementById('raceButton').addEventListener('click', () => {
             window.location.href = 'DuaXeKubet.html'; // Chuyển sang trang Đua Xe Kubet
+        });
+        
+        document.getElementById('loxienButton').addEventListener('click', () => {
+            window.location.href = 'LoXien.html'; // Chuyển sang trang Đua Xe Kubet
         });
     </script>
 </body>

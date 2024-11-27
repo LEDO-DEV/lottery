@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ứng Dụng Dự Đoán Xổ Số</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+            color: #333;
+        }
+        header {
+            background-color: #444;
+            color: white;
+            padding: 10px 0;
+            text-align: center;
+        }
+        .container {
+            width: 80%;
+            margin: 20px auto;
+        }
+        .result-box {
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .result-box h3 {
+            margin-top: 0;
+        }
+        .result-box p {
+            font-size: 16px;
+        }
+        .result-box .result-item {
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        button {
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <h1>Ứng Dụng Dự Đoán Xổ Số Miền Bắc</h1>
+</header>
+
+<div class="container">
+    <div class="result-box">
+        <h3>Kết Quả Dự Đoán</h3>
+        <p id="current-time"></p>
+
+        <div class="result-item">
+            <strong>Kết quả dự đoán:</strong>
+            <p id="predicted-numbers"></p>
+        </div>
+
+        <div class="result-item">
+            <strong>3 Con số cuối:</strong>
+            <p id="three-digits"></p>
+        </div>
+
+        <div class="result-item">
+            <strong>4 Con số cuối:</strong>
+            <p id="four-digits"></p>
+        </div>
+
+        <div class="result-item">
+            <strong>Đầu Lô:</strong>
+            <p id="dau-lo"></p>
+        </div>
+
+        <div class="result-item">
+            <strong>Đuôi Lô:</strong>
+            <p id="duoi-lo"></p>
+        </div>
+
+        <div class="result-item">
+            <strong>5 Con số Ngu Thứ Lô:</strong>
+            <p id="ngu-thu-lo"></p>
+        </div>
+
+        <div class="result-item">
+            <strong>Keno:</strong>
+            <p id="keno"></p>
+        </div>
+
+        <div class="result-item">
+            <strong>Mega 6/45:</strong>
+            <p id="mega"></p>
+        </div>
+
+        <div class="result-item">
+            <strong>Power 6/55:</strong>
+            <p id="power"></p>
+        </div>
+
+        <div class="result-item">
+            <strong>Cặp Lô:</strong>
+            <p id="loto"></p>
+        </div>
+
+        <button id="generate-predictions">Dự đoán</button>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.1.0/math.min.js"></script>
+<script>
+    // Hàm lấy thời gian hiện tại
+    function getCurrentTime() {
+        const now = new Date();
+        const date = formatDate(now);
+        const time = now.toLocaleTimeString();
+        return `${date} ${time}`;
+    }
+
+    // Hàm định dạng ngày tháng năm theo kiểu DD/MM/YYYY
+    function formatDate(date) {
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+    }
+
+    // Hàm tạo số dự đoán tổng hợp
+    function generatePredictions() {
+        // Dự đoán ngẫu nhiên cho từng loại
+        const predictedNumbers = Array.from({ length: 6 }, () => String(Math.floor(Math.random() * 99) + 1).padStart(2, '0')).sort();
+        const threeDigits = Array.from({ length: 3 }, () => String(Math.floor(Math.random() * 999) + 1).padStart(3, '0')).sort();
+        const fourDigits = Array.from({ length: 4 }, () => String(Math.floor(Math.random() * 9999) + 1).padStart(4, '0')).sort();
+        const dauLo = Math.floor(Math.random() * 9) + 1;
+        const duoiLo = Math.floor(Math.random() * 9) + 1;
+        const nguThuLo = Array.from({ length: 5 }, () => String(Math.floor(Math.random() * 99) + 1).padStart(2, '0')).sort();
+        const keno = Array.from({ length: 10 }, () => String(Math.floor(Math.random() * 80) + 1).padStart(2, '0')).sort();
+        const mega = Array.from({ length: 6 }, () => String(Math.floor(Math.random() * 45) + 1).padStart(2, '0')).sort();
+        const power = Array.from({ length: 6 }, () => String(Math.floor(Math.random() * 55) + 1).padStart(2, '0')).sort();
+        const loto = Array.from({ length: 1 }, () => String(Math.floor(Math.random() * 99) + 1).padStart(2, '0')).join('-');
+
+        return {
+            predictedNumbers,
+            threeDigits,
+            fourDigits,
+            dauLo,
+            duoiLo,
+            nguThuLo,
+            keno,
+            mega,
+            power,
+            loto
+        };
+    }
+
+    // Hàm hiển thị kết quả
+    function displayResults(predictions) {
+        document.getElementById('current-time').innerText = `Thời gian hiện tại: ${getCurrentTime()}`;
+        document.getElementById('predicted-numbers').innerText = predictions.predictedNumbers.join(', ');
+        document.getElementById('three-digits').innerText = predictions.threeDigits.join(', ');
+        document.getElementById('four-digits').innerText = predictions.fourDigits.join(', ');
+        document.getElementById('dau-lo').innerText = predictions.dauLo;
+        document.getElementById('duoi-lo').innerText = predictions.duoiLo;
+        document.getElementById('ngu-thu-lo').innerText = predictions.nguThuLo.join(', ');
+        document.getElementById('keno').innerText = predictions.keno.join(', ');
+        document.getElementById('mega').innerText = predictions.mega.join(', ');
+        document.getElementById('power').innerText = predictions.power.join(', ');
+        document.getElementById('loto').innerText = predictions.loto;
+    }
+
+    // Sự kiện khi nhấn nút dự đoán
+    document.getElementById('generate-predictions').addEventListener('click', () => {
+        const predictions = generatePredictions();
+        displayResults(predictions);
+    });
+</script>
+
+</body>
+</html>

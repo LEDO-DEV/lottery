@@ -48,12 +48,17 @@
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s;
+            margin-bottom: 10px;
         }
         .btn:hover {
             background-color: #45a049;
         }
         .output-section {
             margin-top: 20px;
+        }
+        .button-container {
+            display: flex;
+            justify-content: space-between;
         }
     </style>
 </head>
@@ -70,6 +75,10 @@
 
         <button class="btn" id="submitBtn">Xử lý kết quả đua xe</button>
 
+        <div class="button-container">
+            <button class="btn" id="homeBtn">Trang Chủ</button>
+        </div>
+
         <div class="output-section" id="output"></div>
     </div>
 
@@ -85,7 +94,7 @@
             raceInputsContainer.innerHTML = '';
             for (let i = 0; i < races; i++) {
                 const inputField = document.createElement('div');
-                inputField.innerHTML = `
+                inputField.innerHTML = ` 
                     <label for="race${i + 1}">Vòng đua ${i + 1}: Nhập kết quả (các số từ 01 đến 10, cách nhau bởi dấu cách):</label>
                     <input type="text" id="race${i + 1}" placeholder="Nhập kết quả vòng ${i + 1}">
                 `;
@@ -190,6 +199,10 @@
             output += `<ul>${bestNumbers.slice(0, 5).map(item => `<li>${item[0]} (Điểm: ${item[1]})</li>`).join('')}</ul>`;
 
             document.getElementById('output').innerHTML = output;
+        });
+
+        document.getElementById('homeBtn').addEventListener('click', () => {
+            window.location.href = "https://ledo-dev.github.io/lottery/";
         });
     </script>
 </body>

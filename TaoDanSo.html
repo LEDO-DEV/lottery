@@ -1,1 +1,121 @@
-ahihi
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tạo Dàn Đề</title>
+    <style>
+        .container {
+            background-color: #d4edda;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .container input {
+            margin: 5px;
+        }
+        .container button {
+            margin: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <label>Chạm</label>
+        <input type="text" id="cham1">
+        <label>+</label>
+        <input type="text" id="cham2">
+        <label>Tổng</label>
+        <input type="text" id="chamTotal">
+        <button onclick="generateCham()">Tạo dàn</button>
+        <button onclick="resetCham()">Làm lại</button>
+        <label>Kết quả</label>
+        <textarea id="chamResult"></textarea>
+        <button onclick="copyCham()">Copy</button>
+    </div>
+    <div class="container">
+        <label>Đầu</label>
+        <input type="text" id="dau1">
+        <label>+</label>
+        <input type="text" id="dau2">
+        <label>Đuôi</label>
+        <input type="text" id="duoi">
+        <label>+</label>
+        <input type="text" id="dauTotal">
+        <button onclick="generateDau()">Tạo dàn</button>
+        <button onclick="resetDau()">Làm lại</button>
+        <label>Kết quả</label>
+        <textarea id="dauResult"></textarea>
+        <button onclick="copyDau()">Copy</button>
+    </div>
+    <div class="container">
+        <label>Bộ</label>
+        <input type="text" id="bo1">
+        <label>+</label>
+        <input type="text" id="bo2">
+        <label>Tổng</label>
+        <input type="text" id="boTotal">
+        <button onclick="generateBo()">Tạo dàn</button>
+        <button onclick="resetBo()">Làm lại</button>
+        <label>Kết quả</label>
+        <textarea id="boResult"></textarea>
+        <button onclick="copyBo()">Copy</button>
+    </div>
+
+    <script>
+        function generateCham() {
+            // Thêm logic để tạo kết quả Chạm
+            document.getElementById('chamResult').value = "Generated Cham Result";
+        }
+
+        function resetCham() {
+            document.getElementById('cham1').value = '';
+            document.getElementById('cham2').value = '';
+            document.getElementById('chamTotal').value = '';
+            document.getElementById('chamResult').value = '';
+        }
+
+        function copyCham() {
+            var copyText = document.getElementById('chamResult');
+            copyText.select();
+            document.execCommand("copy");
+        }
+
+        function generateDau() {
+            // Thêm logic để tạo kết quả Đầu
+            document.getElementById('dauResult').value = "Generated Dau Result";
+        }
+
+        function resetDau() {
+            document.getElementById('dau1').value = '';
+            document.getElementById('dau2').value = '';
+            document.getElementById('duoi').value = '';
+            document.getElementById('dauTotal').value = '';
+            document.getElementById('dauResult').value = '';
+        }
+
+        function copyDau() {
+            var copyText = document.getElementById('dauResult');
+            copyText.select();
+            document.execCommand("copy");
+        }
+
+        function generateBo() {
+            // Thêm logic để tạo kết quả Bộ
+            document.getElementById('boResult').value = "Generated Bo Result";
+        }
+
+        function resetBo() {
+            document.getElementById('bo1').value = '';
+            document.getElementById('bo2').value = '';
+            document.getElementById('boTotal').value = '';
+            document.getElementById('boResult').value = '';
+        }
+
+        function copyBo() {
+            var copyText = document.getElementById('boResult');
+            copyText.select();
+            document.execCommand("copy");
+        }
+    </script>
+</body>
+</html>

@@ -97,7 +97,18 @@
         </div>
     </div>
 
+    <!-- Thêm thẻ audio ẩn -->
+    <audio id="pageAudio" src="Twindle.mp3" preload="auto"></audio>
+
     <script>
+        // Chức năng phát âm thanh khi trang được tải
+        document.addEventListener('DOMContentLoaded', () => {
+            const audio = document.getElementById('pageAudio');
+            audio.play().catch(error => {
+                console.warn('Tự động phát âm thanh có thể bị chặn bởi trình duyệt:', error);
+            });
+        });
+
         document.getElementById('lottoButton').addEventListener('click', () => {
             window.location.href = 'dandexsmb.html'; // Chuyển sang trang Dàn Đề XSMB
         });

@@ -19,31 +19,15 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            position: relative; /* Để logo có thể được đặt lên nền */
+            position: relative;
         }
         .navbar h1 {
             margin: 0;
-            position: relative; /* Để tiêu đề nổi lên trên logo */
-            z-index: 1;
         }
         .navbar img {
-            height: 40px; /* Kích thước hình ảnh */
-            margin-left: 10px; /* Khoảng cách giữa chữ và logo */
+            height: 40px;
+            margin-left: 10px;
         }
-        .navbar::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image: url('luckynumber.png');
-            background-size: cover; /* Kéo dài hình ảnh để phủ kín */
-            background-position: center; /* Căn giữa logo */
-            opacity: 0.1; /* Giảm độ mờ cho logo phía sau */
-            z-index: 0; /* Đảm bảo logo ở phía sau */
-        }
-
         .container {
             background-color: white;
             border-radius: 8px;
@@ -56,11 +40,11 @@
         .button-container {
             margin-top: 20px;
             display: flex;
-            flex-wrap: wrap; /* Cho phép các nút xuống hàng khi không còn đủ không gian ngang */
+            flex-wrap: wrap;
             justify-content: space-between;
         }
         .button-container button {
-            width: 48%; /* Mỗi nút chiếm 48% chiều rộng */
+            width: 48%;
             padding: 10px;
             background-color: #4CAF50;
             color: white;
@@ -69,7 +53,7 @@
             border-radius: 5px;
             cursor: pointer;
             transition: background-color 0.3s;
-            margin-bottom: 10px; /* Thêm khoảng cách giữa các nút khi xuống hàng */
+            margin-bottom: 10px;
         }
         .button-container button:hover {
             background-color: #45a049;
@@ -77,10 +61,9 @@
     </style>
 </head>
 <body>
-    <!-- Thanh điều hướng -->
     <div class="navbar">
         <h1>LE VAN DO - DEV</h1>
-        <img src="luckynumber.png" alt="Logo"> <!-- Chèn logo ở đây -->
+        <img src="luckynumber.png" alt="Logo">
     </div>
 
     <div class="container">
@@ -97,48 +80,50 @@
         </div>
     </div>
 
-    <!-- Thêm thẻ audio ẩn -->
+    <!-- Thẻ audio -->
     <audio id="pageAudio" src="Twindle.mp3" preload="auto"></audio>
 
     <script>
-        // Chức năng phát âm thanh khi trang được tải
-        document.addEventListener('DOMContentLoaded', () => {
+        // Chức năng phát âm thanh khi người dùng tương tác
+        function playAudioOnce() {
             const audio = document.getElementById('pageAudio');
-            audio.play().catch(error => {
-                console.warn('Tự động phát âm thanh có thể bị chặn bởi trình duyệt:', error);
-            });
-        });
+            if (audio.paused) {
+                audio.play().then(() => {
+                    console.log("Âm thanh đã được phát.");
+                }).catch(err => {
+                    console.error("Lỗi phát âm thanh:", err);
+                });
+            }
+        }
 
+        // Lắng nghe sự kiện đầu tiên của người dùng
+        document.addEventListener('click', playAudioOnce, { once: true });
+        document.addEventListener('touchstart', playAudioOnce, { once: true });
+
+        // Sự kiện chuyển trang
         document.getElementById('lottoButton').addEventListener('click', () => {
-            window.location.href = 'dandexsmb.html'; // Chuyển sang trang Dàn Đề XSMB
+            window.location.href = 'dandexsmb.html';
         });
-
         document.getElementById('loxienButton').addEventListener('click', () => {
-            window.location.href = 'LoXien.html'; // Chuyển sang trang Lô Xiên
+            window.location.href = 'LoXien.html';
         });
-        
         document.getElementById('MegaVietlottButton').addEventListener('click', () => {
-            window.location.href = 'MegaVietlott.html'; // Chuyển sang trang Mega 6/45 Vietlott
+            window.location.href = 'MegaVietlott.html';
         });
-
         document.getElementById('MegaBetButton').addEventListener('click', () => {
-            window.location.href = 'MegaBet.html'; // Chuyển sang trang Mega 6/49 - Kubet
+            window.location.href = 'MegaBet.html';
         });
-
         document.getElementById('PowerVietlottButton').addEventListener('click', () => {
-            window.location.href = 'PowerVietlott.html'; // Chuyển sang trang Power 6/55 - Vietlott
+            window.location.href = 'PowerVietlott.html';
         });
-
         document.getElementById('DanDe2ChamButton').addEventListener('click', () => {
-            window.location.href = 'DanDe2Cham.html'; // Dàn Đề 2 Chạm Nuôi Tuần
+            window.location.href = 'DanDe2Cham.html';
         });
-
         document.getElementById('AIXOSOButton').addEventListener('click', () => {
-            window.location.href = 'AIthongkexsmb.html'; // AI Xổ Số Full Miền
+            window.location.href = 'AIthongkexsmb.html';
         });
-
         document.getElementById('TaoDanSoButton').addEventListener('click', () => {
-            window.location.href = 'TaoDanSo.html'; // Tạo Dàn Số - Ghép Càng
+            window.location.href = 'TaoDanSo.html';
         });
     </script>
 </body>

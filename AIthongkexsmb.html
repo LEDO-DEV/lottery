@@ -234,21 +234,7 @@
             }, 2000);
         });
 
-            <!-- Thẻ audio -->
-    <audio id="pageAudio" src="Carme.mp3" preload="auto"></audio>
-
-    <script>
-        // Chức năng phát âm thanh khi người dùng tương tác
-        function playAudioOnce() {
-            const audio = document.getElementById('pageAudio');
-            if (audio.paused) {
-                audio.play().then(() => {
-                    console.log("Âm thanh đã được phát.");
-                }).catch(err => {
-                    console.error("Lỗi phát âm thanh:", err);
-                });
-            }
-        }
+        
 
         document.getElementById('homeButton').addEventListener('click', () => {
             window.location.href = 'https://ledo-dev.github.io/lottery/';

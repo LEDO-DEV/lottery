@@ -104,12 +104,14 @@
     </div>
     <script>
         const generateRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
         const fillWithProbability = (set, count, min, max) => {
             while (set.size < count) {
                 set.add(generateRandomNumber(min, max));
             }
             return [...set];
         };
+
         const monteCarloSimulation = (iterations) => {
             const results = {
                 ghep4D: [],
@@ -123,23 +125,28 @@
                 power6_55: [],
                 dan4Cham: []
             };
+
             for (let i = 0; i < iterations; i++) {
                 results.ghep4D.push(fillWithProbability(new Set(), 7, 0, 9));
                 results.ghep3D.push(fillWithProbability(new Set(), 7, 0, 9));
+                
                 const dan2D = fillWithProbability(new Set(), 64, 0, 99)
                     .map(n => n.toString().padStart(2, '0'))
                     .sort((a, b) => a - b);
                 results.dan2D.push(dan2D);
+
+                const dan4Cham = fillWithProbability(new Set(), 4, 0, 9)
+                    .sort((a, b) => a - b);
                 results.dan4Cham.push(dan4Cham);
+
                 results.songThuLo.push(fillWithProbability(new Set(), 2, 0, 99).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
                 results.tamThuLo.push(fillWithProbability(new Set(), 3, 0, 99).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
                 results.tuThuLo.push(fillWithProbability(new Set(), 4, 0, 99).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
                 results.nguThuLo.push(fillWithProbability(new Set(), 5, 0, 99).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
                 results.mega6_45.push(fillWithProbability(new Set(), 6, 1, 45).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
                 results.power6_55.push(fillWithProbability(new Set(), 6, 1, 55).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
-                const dan4Cham = fillWithProbability(new Set(), 4, 0, 9).sort((a, b) => a - b);
-                
             }
+
             return results;
         };
 
@@ -162,82 +169,53 @@
 
         const provinces = {
             "Miền Bắc": ["Hà Nội", "Thái Bình", "Bắc Ninh", "Hải Phòng", "Nam Định", "Quảng Ninh"],
-            "Miền Trung": ["Bình Định", "Đà Nẵng", "Đắk Lắk", "Đắk Nông", "Gia Lai", "Huế", "Khánh Hòa", "Kon Tum", "Ninh Thuận", "Phú Yên", "Quảng Bình", "Quảng Nam", "Quảng Ngãi", "Quảng Trị"],
-            "Miền Nam": ["An Giang", "Bạc Liêu", "Bến Tre", "Bình Dương", "Bình Phước", "Bình Thuận", "Cà Mau", "Cần Thơ", "Đà Lạt", "Đồng Nai", "Đồng Tháp", "Hậu Giang", "Kiên Giang", "Long An", "Sóc Trăng", "Tây Ninh", "Tiền Giang", "TP.HCM", "Trà Vinh", "Vĩnh Long", "Vũng Tàu"]
+            "Miền Trung": ["Bình Định", "Đà Nẵng", "Đắk Lắk", "Gia Lai", "Huế", "Khánh Hòa"],
+            "Miền Nam": ["TP.HCM", "Cà Mau", "Đà Lạt", "Sóc Trăng", "Tiền Giang"]
         };
 
         const updateProvinces = (region) => {
             const provinceSelect = document.getElementById('province');
             provinceSelect.innerHTML = '<option value="">Chọn đài xổ số</option>';
-            if (region === "Miền Bắc" || region === "Miền Trung" || region === "Miền Nam") {
-                const regionProvinces = provinces[region];
-                regionProvinces.forEach(province => {
-                    const option = document.createElement('option');
-                    option.value = province;
-                    option.textContent = province;
-                    provinceSelect.appendChild(option);
-                });
-            }
+            provinces[region].forEach(province => {
+                const option = document.createElement('option');
+                option.value = province;
+                option.textContent = province;
+                provinceSelect.appendChild(option);
+            });
         };
 
-        // Gọi updateProvinces khi trang được tải để hiển thị các đài của Miền Bắc mặc định
         window.addEventListener('DOMContentLoaded', () => {
             updateProvinces("Miền Bắc");
-        });
 
-        // Cập nhật các đài khi người dùng thay đổi miền
-        document.getElementById('region').addEventListener('change', (e) => {
-            updateProvinces(e.target.value);
-        });
+            document.getElementById('region').addEventListener('change', (e) => {
+                updateProvinces(e.target.value);
+            });
 
-        const isAllowedToSpin = (province) => {
-            const today = new Date().toISOString().slice(0, 10);  // Lấy ngày hiện tại theo định dạng yyyy-mm-dd
-            const lastSpin = localStorage.getItem(province);
+            document.getElementById('startSimulation').addEventListener('click', () => {
+                const iterations = parseInt(document.getElementById('simulations').value);
+                const region = document.getElementById('region').value;
+                const province = document.getElementById('province').value;
 
-            if (lastSpin === today) {
-                return false; // Nếu đã quay trong ngày hôm nay, không cho quay
-            }
-            return true;
-        };
+                if (!iterations || !province) {
+                    alert("Vui lòng nhập đầy đủ thông tin.");
+                    return;
+                }
 
-        const recordSpinDate = (province) => {
-            const today = new Date().toISOString().slice(0, 10);
-            localStorage.setItem(province, today);  // Lưu ngày quay của đài xổ số
-        };
+                const loadingDiv = document.getElementById('loading');
+                const outputDiv = document.getElementById('output');
+                outputDiv.style.display = 'block';
+                loadingDiv.style.display = 'block';
 
-        document.getElementById('startSimulation').addEventListener('click', () => {
-            const simulations = parseInt(document.getElementById('simulations').value);
-            const region = document.getElementById('region').value;
-            const province = document.getElementById('province').value;
+                setTimeout(() => {
+                    const results = monteCarloSimulation(iterations);
+                    loadingDiv.style.display = 'none';
+                    displayResults(results, province);
+                }, 1000);
+            });
 
-            if (!simulations || simulations <= 0 || !province) {
-                alert('Vui lòng nhập đầy đủ thông tin.');
-                return;
-            }
-
-            if (!isAllowedToSpin(province)) {
-                alert(`Đài ${province} đã quay hôm nay rồi. Hãy quay lại vào ngày mai!`);
-                return;
-            }
-
-            recordSpinDate(province);  // Lưu ngày quay mới
-
-            document.getElementById('output').style.display = 'block';
-            document.getElementById('loading').style.display = 'block';
-            document.getElementById('result').style.display = 'none';
-
-            setTimeout(() => {
-                const results = monteCarloSimulation(simulations);
-                document.getElementById('loading').style.display = 'none';
-                document.getElementById('result').style.display = 'block';
-                displayResults(results, region);
-            }, 2000);
-        });
-
-        
-
-        document.getElementById('homeButton').addEventListener('click', () => {
-            window.location.href = 'https://ledo-dev.github.io/lottery/';
+            document.getElementById('homeButton').addEventListener('click', () => {
+                location.reload();
+            });
         });
     </script>
 </body>

@@ -5,7 +5,77 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Phần Mềm Lấy Full Xổ Số Kiến Thiết</title>
     <style>
-        /* (Giữ nguyên style cũ) */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 800px;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .input-section {
+            margin-bottom: 20px;
+        }
+        .input-section label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        .input-section input, .input-section select {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .btn:hover {
+            background-color: #45a049;
+        }
+        .output-section {
+            margin-top: 20px;
+            display: none;
+        }
+        .loading {
+            text-align: center;
+            font-size: 16px;
+            color: #888;
+        }
+        .result-section {
+            margin-top: 20px;
+        }
+        .result-section h2 {
+            color: #333;
+        }
+        .result-section p {
+            margin: 5px 0;
+        }
     </style>
 </head>
 <body>
@@ -26,22 +96,82 @@
             </select>
         </div>
         <button class="btn" id="startSimulation">Lấy Kết Quả Dự Đoán</button>
-        <button class="btn" id="viewHistory">Xem Lịch Sử Quay</button>
         <div class="output-section" id="output">
             <div class="loading" id="loading">Đang chạy mô phỏng, vui lòng chờ...</div>
             <div class="result-section" id="result"></div>
         </div>
         <button class="btn" id="homeButton">Trang Chủ</button>
     </div>
-
     <script>
+        const generateRandomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+
+        const fillWithProbability = (set, count, min, max) => {
+            while (set.size < count) {
+                set.add(generateRandomNumber(min, max));
+            }
+            return [...set];
+        };
+
+        const monteCarloSimulation = (iterations) => {
+            const results = {
+                ghep4D: [],
+                ghep3D: [],
+                dan2D: [],
+                songThuLo: [],
+                tamThuLo: [],
+                tuThuLo: [],
+                nguThuLo: [],
+                mega6_45: [],
+                power6_55: [],
+                dan4Cham: []
+            };
+
+            for (let i = 0; i < iterations; i++) {
+                results.ghep4D.push(fillWithProbability(new Set(), 7, 0, 9));
+                results.ghep3D.push(fillWithProbability(new Set(), 7, 0, 9));
+                
+                const dan2D = fillWithProbability(new Set(), 64, 0, 99)
+                    .map(n => n.toString().padStart(2, '0'))
+                    .sort((a, b) => a - b);
+                results.dan2D.push(dan2D);
+
+                const dan4Cham = fillWithProbability(new Set(), 4, 0, 9)
+                    .sort((a, b) => a - b);
+                results.dan4Cham.push(dan4Cham);
+
+                results.songThuLo.push(fillWithProbability(new Set(), 2, 0, 99).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
+                results.tamThuLo.push(fillWithProbability(new Set(), 3, 0, 99).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
+                results.tuThuLo.push(fillWithProbability(new Set(), 4, 0, 99).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
+                results.nguThuLo.push(fillWithProbability(new Set(), 5, 0, 99).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
+                results.mega6_45.push(fillWithProbability(new Set(), 6, 1, 45).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
+                results.power6_55.push(fillWithProbability(new Set(), 6, 1, 55).map(n => n.toString().padStart(2, '0')).sort((a, b) => a - b));
+            }
+
+            return results;
+        };
+
+        const displayResults = (results, region) => {
+            const resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = `
+                <h2>Kết quả mô phỏng: ${region}</h2>
+                <p><strong>Ghép 4D:</strong> ${results.ghep4D[0].join(', ')}</p>
+                <p><strong>Ghép 3D:</strong> ${results.ghep3D[0].join(', ')}</p>
+                <p><strong>Dàn 2D:</strong> ${results.dan2D[0].join(', ')}</p>
+                <p><strong>Song Thủ Lô:</strong> ${results.songThuLo[0].join(', ')}</p>
+                <p><strong>Tam Thủ Lô:</strong> ${results.tamThuLo[0].join(', ')}</p>
+                <p><strong>Tứ Thủ Lô:</strong> ${results.tuThuLo[0].join(', ')}</p>
+                <p><strong>Ngũ Thủ Lô:</strong> ${results.nguThuLo[0].join(', ')}</p>
+                <p><strong>Mega 6/45:</strong> ${results.mega6_45[0].join(', ')}</p>
+                <p><strong>Power 6/55:</strong> ${results.power6_55[0].join(', ')}</p>
+                <p><strong>Dàn 4 Chạm:</strong> ${results.dan4Cham[0].join(', ')}</p>
+            `;
+        };
+
         const provinces = {
             "Miền Bắc": ["Hà Nội", "Thái Bình", "Bắc Ninh", "Hải Phòng", "Nam Định", "Quảng Ninh"],
             "Miền Trung": ["Bình Định", "Đà Nẵng", "Đắk Lắk", "Gia Lai", "Huế", "Khánh Hòa"],
             "Miền Nam": ["TP.HCM", "Cà Mau", "Đà Lạt", "Sóc Trăng", "Tiền Giang"]
         };
-
-        const filePath = "history.txt"; // Đường dẫn file lịch sử trên server
 
         const updateProvinces = (region) => {
             const provinceSelect = document.getElementById('province');
@@ -54,44 +184,6 @@
             });
         };
 
-        const readHistory = async () => {
-            try {
-                const response = await fetch(filePath);
-                const history = await response.text();
-                return history.split("\n").filter(line => line.trim());
-            } catch (error) {
-                console.error("Không thể đọc file lịch sử:", error);
-                return [];
-            }
-        };
-
-        const saveHistory = async (entry) => {
-            try {
-                const response = await fetch(filePath, {
-                    method: "POST",
-                    body: entry,
-                });
-                return response.ok;
-            } catch (error) {
-                console.error("Không thể lưu lịch sử:", error);
-            }
-        };
-
-        const checkAlreadyDrawn = async (region, province) => {
-            const history = await readHistory();
-            const today = new Date().toISOString().split("T")[0];
-            return history.some(line => line.startsWith(`${today},${region},${province}`));
-        };
-
-        const monteCarloSimulation = (iterations) => {
-            // (Giữ nguyên mã Monte Carlo như trong mã gốc)
-        };
-
-        const displayResults = (results, region, province) => {
-            const resultDiv = document.getElementById('result');
-            resultDiv.innerHTML = `...`; // Hiển thị kết quả tương tự mã gốc
-        };
-
         window.addEventListener('DOMContentLoaded', () => {
             updateProvinces("Miền Bắc");
 
@@ -99,7 +191,7 @@
                 updateProvinces(e.target.value);
             });
 
-            document.getElementById('startSimulation').addEventListener('click', async () => {
+            document.getElementById('startSimulation').addEventListener('click', () => {
                 const iterations = parseInt(document.getElementById('simulations').value);
                 const region = document.getElementById('region').value;
                 const province = document.getElementById('province').value;
@@ -109,30 +201,20 @@
                     return;
                 }
 
-                if (await checkAlreadyDrawn(region, province)) {
-                    alert("Đài này đã quay hôm nay. Vui lòng thử lại ngày mai.");
-                    return;
-                }
-
                 const loadingDiv = document.getElementById('loading');
                 const outputDiv = document.getElementById('output');
                 outputDiv.style.display = 'block';
                 loadingDiv.style.display = 'block';
 
-                setTimeout(async () => {
+                setTimeout(() => {
                     const results = monteCarloSimulation(iterations);
                     loadingDiv.style.display = 'none';
-                    displayResults(results, region, province);
-
-                    const today = new Date().toISOString().split("T")[0];
-                    const entry = `${today},${region},${province},${JSON.stringify(results)}\n`;
-                    await saveHistory(entry);
+                    displayResults(results, province);
                 }, 1000);
             });
 
-            document.getElementById('viewHistory').addEventListener('click', async () => {
-                const history = await readHistory();
-                alert(history.join("\n"));
+            document.getElementById('homeButton').addEventListener('click', () => {
+                location.reload();
             });
         });
     </script>

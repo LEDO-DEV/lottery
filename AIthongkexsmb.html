@@ -156,10 +156,10 @@
             return results;
         };
 
-        const displayResults = (results, region) => {
+        const displayResults = (results, province) => {
             const resultDiv = document.getElementById('result');
             resultDiv.innerHTML = `
-                <h2>Kết quả mô phỏng: ${region}</h2>
+                <h2>Kết quả mô phỏng: ${province}</h2>
                 <p><strong>Ghép 4D:</strong> ${results.ghep4D[0].join(', ')}</p>
                 <p><strong>Ghép 3D:</strong> ${results.ghep3D[0].join(', ')}</p>
                 <p><strong>Dàn 2D:</strong> ${results.dan2D[0].join(', ')}</p>
@@ -175,8 +175,22 @@
 
         const provinces = {
             "Miền Bắc": ["Hà Nội", "Thái Bình", "Bắc Ninh", "Hải Phòng", "Nam Định", "Quảng Ninh"],
-            "Miền Trung": ["Bình Định", "Đà Nẵng", "Đắk Lắk", "Gia Lai", "Huế", "Khánh Hòa"],
-            "Miền Nam": ["TP.HCM", "Cà Mau", "Đà Lạt", "Sóc Trăng", "Vĩnh Long", "Cần Thơ"]
+            "Miền Trung": ["Bình Định", "Thừa Thiên Huế", "Đà Nẵng", "Quảng Nam", "Quảng Ngãi"],
+            "Miền Nam": ["TP.HCM", "Bình Dương", "Long An", "Vĩnh Long", "Cần Thơ"]
+        };
+
+        const getSpunData = (region, province) => {
+            const regionSpunData = JSON.parse(localStorage.getItem('spunData')) || {};
+            return regionSpunData[region] ? regionSpunData[region][province] : false;
+        };
+
+        const setSpunData = (region, province) => {
+            const regionSpunData = JSON.parse(localStorage.getItem('spunData')) || {};
+            if (!regionSpunData[region]) {
+                regionSpunData[region] = {};
+            }
+            regionSpunData[region][province] = new Date().toISOString().split('T')[0];
+            localStorage.setItem('spunData', JSON.stringify(regionSpunData));
         };
 
         const updateProvinces = (region) => {
@@ -184,29 +198,29 @@
             provinceSelect.innerHTML = provinces[region].map(p => `<option value="${p}">${p}</option>`).join('');
         };
 
-        const hasSpunToday = () => {
-            const lastSpinDate = localStorage.getItem('lastSpinDate');
+        const hasSpunToday = (region, province) => {
+            const lastSpinDate = getSpunData(region, province);
             const today = new Date().toISOString().split('T')[0];
             return lastSpinDate === today;
         };
 
-        const setSpinDate = () => {
-            const today = new Date().toISOString().split('T')[0];
-            localStorage.setItem('lastSpinDate', today);
-        };
-
         document.getElementById('startSimulation').addEventListener('click', () => {
-            if (hasSpunToday()) {
+            const region = document.getElementById('region').value;
+            const province = document.getElementById('province').value;
+
+            if (!province) {
+                alert("Vui lòng chọn đài xổ số.");
+                return;
+            }
+
+            if (hasSpunToday(region, province)) {
                 document.getElementById('spinNotice').style.display = 'block';
                 return;
             }
 
             const simulations = parseInt(document.getElementById('simulations').value);
-            const region = document.getElementById('region').value;
-            const province = document.getElementById('province').value;
-
-            if (!simulations || !province) {
-                alert("Vui lòng nhập đầy đủ thông tin.");
+            if (!simulations || simulations <= 0) {
+                alert("Vui lòng nhập số phiên chạy hợp lệ.");
                 return;
             }
 
@@ -221,7 +235,7 @@
                 const results = monteCarloSimulation(simulations);
                 loadingDiv.style.display = 'none';
                 displayResults(results, province);
-                setSpinDate();
+                setSpunData(region, province); // Lưu thông tin đã quay
             }, 1000);
         });
 
@@ -229,12 +243,10 @@
             location.reload();
         });
 
-        // Cập nhật đài xổ số khi thay đổi miền
         document.getElementById('region').addEventListener('change', (e) => {
             updateProvinces(e.target.value);
         });
 
-        // Khởi tạo đài xổ số cho miền mặc định
         updateProvinces("Miền Bắc");
     </script>
 </body>

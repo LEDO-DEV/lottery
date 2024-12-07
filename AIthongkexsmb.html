@@ -76,6 +76,11 @@
         .result-section p {
             margin: 5px 0;
         }
+        #spinNotice {
+            color: red;
+            text-align: center;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -96,6 +101,7 @@
             </select>
         </div>
         <button class="btn" id="startSimulation">Lấy Kết Quả Dự Đoán</button>
+        <div id="spinNotice">Bạn đã quay hôm nay rồi. Hãy quay lại vào ngày mai!</div>
         <div class="output-section" id="output">
             <div class="loading" id="loading">Đang chạy mô phỏng, vui lòng chờ...</div>
             <div class="result-section" id="result"></div>
@@ -170,53 +176,66 @@
         const provinces = {
             "Miền Bắc": ["Hà Nội", "Thái Bình", "Bắc Ninh", "Hải Phòng", "Nam Định", "Quảng Ninh"],
             "Miền Trung": ["Bình Định", "Đà Nẵng", "Đắk Lắk", "Gia Lai", "Huế", "Khánh Hòa"],
-            "Miền Nam": ["TP.HCM", "Cà Mau", "Đà Lạt", "Sóc Trăng", "Tiền Giang"]
+            "Miền Nam": ["TP.HCM", "Cà Mau", "Đà Lạt", "Sóc Trăng", "Vĩnh Long", "Cần Thơ"]
         };
 
         const updateProvinces = (region) => {
             const provinceSelect = document.getElementById('province');
-            provinceSelect.innerHTML = '<option value="">Chọn đài xổ số</option>';
-            provinces[region].forEach(province => {
-                const option = document.createElement('option');
-                option.value = province;
-                option.textContent = province;
-                provinceSelect.appendChild(option);
-            });
+            provinceSelect.innerHTML = provinces[region].map(p => `<option value="${p}">${p}</option>`).join('');
         };
 
-        window.addEventListener('DOMContentLoaded', () => {
-            updateProvinces("Miền Bắc");
+        const hasSpunToday = () => {
+            const lastSpinDate = localStorage.getItem('lastSpinDate');
+            const today = new Date().toISOString().split('T')[0];
+            return lastSpinDate === today;
+        };
 
-            document.getElementById('region').addEventListener('change', (e) => {
-                updateProvinces(e.target.value);
-            });
+        const setSpinDate = () => {
+            const today = new Date().toISOString().split('T')[0];
+            localStorage.setItem('lastSpinDate', today);
+        };
 
-            document.getElementById('startSimulation').addEventListener('click', () => {
-                const iterations = parseInt(document.getElementById('simulations').value);
-                const region = document.getElementById('region').value;
-                const province = document.getElementById('province').value;
+        document.getElementById('startSimulation').addEventListener('click', () => {
+            if (hasSpunToday()) {
+                document.getElementById('spinNotice').style.display = 'block';
+                return;
+            }
 
-                if (!iterations || !province) {
-                    alert("Vui lòng nhập đầy đủ thông tin.");
-                    return;
-                }
+            const simulations = parseInt(document.getElementById('simulations').value);
+            const region = document.getElementById('region').value;
+            const province = document.getElementById('province').value;
 
-                const loadingDiv = document.getElementById('loading');
-                const outputDiv = document.getElementById('output');
-                outputDiv.style.display = 'block';
-                loadingDiv.style.display = 'block';
+            if (!simulations || !province) {
+                alert("Vui lòng nhập đầy đủ thông tin.");
+                return;
+            }
 
-                setTimeout(() => {
-                    const results = monteCarloSimulation(iterations);
-                    loadingDiv.style.display = 'none';
-                    displayResults(results, province);
-                }, 1000);
-            });
+            const outputDiv = document.getElementById('output');
+            const loadingDiv = document.getElementById('loading');
+            const resultDiv = document.getElementById('result');
+            outputDiv.style.display = 'block';
+            loadingDiv.style.display = 'block';
+            resultDiv.innerHTML = '';
 
-            document.getElementById('homeButton').addEventListener('click', () => {
-                location.reload();
-            });
+            setTimeout(() => {
+                const results = monteCarloSimulation(simulations);
+                loadingDiv.style.display = 'none';
+                displayResults(results, province);
+                setSpinDate();
+            }, 1000);
         });
+
+        document.getElementById('homeButton').addEventListener('click', () => {
+            location.reload();
+        });
+
+        // Cập nhật đài xổ số khi thay đổi miền
+        document.getElementById('region').addEventListener('change', (e) => {
+            updateProvinces(e.target.value);
+        });
+
+        // Khởi tạo đài xổ số cho miền mặc định
+        updateProvinces("Miền Bắc");
     </script>
 </body>
 </html>

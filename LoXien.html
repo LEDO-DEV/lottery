@@ -91,6 +91,7 @@
   <script>
     const formatNumber = (num) => (num < 10 ? '0' + num : num.toString());
 
+    // Chỉnh sửa việc tách số và lọc số không hợp lệ (số từ 81 trở lên)
     const splitAndFormatNumbers = (input) => {
       return input.split(',').map(num => formatNumber(parseInt(num.trim()))).filter(num => !isNaN(num) && num >= "01" && num <= "80");
     };
@@ -117,14 +118,9 @@
       return Math.sqrt(variance).toFixed(2);
     };
 
-    const generateSmartNumbers = (hotNumbers, coldNumbers, count) => {
-      const chosen = [];
-      while (chosen.length < count) {
-        const pool = chosen.length < count / 2 ? hotNumbers : coldNumbers;
-        const [num] = pool[Math.floor(Math.random() * pool.length)];
-        if (!chosen.includes(num)) chosen.push(num);
-      }
-      return chosen;
+    const generateSmartNumbers = (hotNumbers, count) => {
+      // Lựa chọn các số nóng
+      return hotNumbers.slice(0, count).map(([num]) => num);
     };
 
     document.getElementById('analyzeButton').addEventListener('click', () => {
@@ -146,7 +142,7 @@
       const frequency = calculateFrequency(data, allNumbers);
       const { hotNumbers, coldNumbers } = getHotAndColdNumbers(frequency);
       const standardDeviation = calculateStandardDeviation(frequency);
-      const chosenNumbers = generateSmartNumbers(hotNumbers, coldNumbers, numToChoose);
+      const chosenNumbers = generateSmartNumbers(hotNumbers, numToChoose);
 
       const resultsDiv = document.getElementById('results');
       resultsDiv.innerHTML = `

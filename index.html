@@ -72,9 +72,7 @@
             <button id="AIXOSOButton">AI - Xổ Số (Bắc - Trung - Nam)</button>
             <button id="lottoButton">Dàn Đề XSMB</button>
             <button id="DanDe2ChamButton">Dàn Đề 2 Chạm Nuôi Tuần</button>
-            <button id="loxienButton">Lô Xiên</button>
-            <button id="PowerVietlottButton">Power 6/55 - Vietlott</button><br>
-            <button id="MegaVietlottButton">Mega 6/45 - Vietlott</button><br>
+            <button id="loxienButton">Keno</button>
         </div>
     </div>
 
@@ -99,29 +97,18 @@
         document.addEventListener('touchstart', playAudioOnce, { once: true });
 
         // Sự kiện chuyển trang
-        document.getElementById('lottoButton').addEventListener('click', () => {
+        document.getElementById('lottoButton').addEventListener('click', () => { 
             window.location.href = 'dandexsmb.html';
         });
-        document.getElementById('loxienButton').addEventListener('click', () => {
+        document.getElementById('loxienButton').addEventListener('click', () => { 
             window.location.href = 'LoXien.html';
         });
-        document.getElementById('MegaVietlottButton').addEventListener('click', () => {
-            window.location.href = 'MegaVietlott.html';
-        });
-        document.getElementById('MegaBetButton').addEventListener('click', () => {
-            window.location.href = 'MegaBet.html';
-        });
-        document.getElementById('PowerVietlottButton').addEventListener('click', () => {
-            window.location.href = 'PowerVietlott.html';
-        });
-        document.getElementById('DanDe2ChamButton').addEventListener('click', () => {
+    
+        document.getElementById('DanDe2ChamButton').addEventListener('click', () => { 
             window.location.href = 'DanDe2Cham.html';
         });
-        document.getElementById('AIXOSOButton').addEventListener('click', () => {
+        document.getElementById('AIXOSOButton').addEventListener('click', () => { 
             window.location.href = 'AIthongkexsmb.html';
-        });
-        document.getElementById('TaoDanSoButton').addEventListener('click', () => {
-            window.location.href = 'TaoDanSo.html';
         });
     </script>
 </body>

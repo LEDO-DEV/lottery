@@ -145,7 +145,7 @@
                 results.ghep4D.push(fillWithProbability(new Set(), 7, 0, 9));
                 results.ghep3D.push(fillWithProbability(new Set(), 7, 0, 9));
                 
-                const dan2D = fillWithProbability(new Set(), 40, 0, 99)
+                const dan2D = fillWithProbability(new Set(), 64, 0, 99)
                     .map(n => n.toString().padStart(2, '0'))
                     .sort((a, b) => a - b);
                 results.dan2D.push(dan2D);
@@ -171,7 +171,7 @@
                 <h2>Kết quả mô phỏng - AI: ${province}</h2>
                 <p><strong>Ghép 4D:</strong> ${results.ghep4D[0].join(',')}</p>
                 <p><strong>Ghép 3D:</strong> ${results.ghep3D[0].join(',')}</p>
-                <p><strong>Dàn 2D(40S):</strong> ${results.dan2D[0].join(',')}</p>
+                <p><strong>Dàn 2D(64S):</strong> ${results.dan2D[0].join(',')}</p>
                 <p><strong>Song Thủ Lô:</strong> ${results.songThuLo[0].join(',')}</p>
                 <p><strong>Tam Thủ Lô:</strong> ${results.tamThuLo[0].join(',')}</p>
                 <p><strong>Tứ Thủ Lô:</strong> ${results.tuThuLo[0].join(',')}</p>
